@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "GMGN Tracker — проверка источника",
+  "version": "0.1.0",
+  "description": "По нажатию сохраняет образец видимых строк выбранных кошельков GMGN для настройки отдельного бота.",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_title": "Проверить Wallet Tracker GMGN",
+    "default_popup": "popup.html"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'"
+  }
+}

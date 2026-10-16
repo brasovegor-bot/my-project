@@ -1,0 +1,13 @@
+<!doctype html><html lang="ru"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GMGN — проверка трекера</title>
+<link rel="stylesheet" href="popup.css">
+<main><div class="tag">GMGN → TELEGRAM</div><h1>Проверка Wallet Tracker</h1>
+<p id="wallets">Загрузка выбранных кошельков…</p>
+<div class="notice">Сначала проверим, как GMGN показывает сделки. Эта версия ещё не отправляет уведомления.</div>
+<ol><li>Открой GMGN и покажи Wallet Tracker.</li><li>На экране должна быть строка хотя бы одного выбранного кошелька.</li><li>Нажми кнопку ниже, затем скачай образец и прикрепи его в чат Codex.</li></ol>
+<button id="capture" disabled>Снять образец трекера</button>
+<button id="download" disabled>Скачать образец JSON</button>
+<p id="status" role="status"></p>
+<p class="muted">Читаются только видимые строки. Ключи и cookies не запрашиваются. Изменений в GMGN и сетевой отправки нет.</p>
+</main><script type="module" src="popup.js"></script></html>

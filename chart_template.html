@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__TITLE__ · минутные свечи</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#080e19;color:#e5edf9}*{box-sizing:border-box}body{margin:0;padding:28px}main{max-width:1600px;margin:auto}.eyebrow{font-size:12px;letter-spacing:2px;color:#8295b2}h1{font-size:30px;margin:10px 0}h1 span{font-size:14px;color:#40d7b1;margin-left:12px}.muted{color:#91a3bd;font-size:13px;line-height:1.6}.panel{margin-top:22px;background:#101a2a;border:1px solid #23324a;border-radius:18px;overflow:hidden;box-shadow:0 20px 70px #0003}.toolbar{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}button,select{background:#18263b;color:#e5edf9;border:1px solid #30435e;border-radius:8px;padding:8px 12px;cursor:pointer}button:hover{background:#253b56}.stats{display:flex;gap:22px;padding:0 20px 16px;flex-wrap:wrap}.stat{font-size:12px;color:#91a3bd}.stat b{display:block;font-variant-numeric:tabular-nums;color:#ecf3ff;font-size:18px;margin-top:5px}#wrap{position:relative}canvas{display:block;width:100%;height:560px;touch-action:none}#tip{position:absolute;pointer-events:none;background:#17273cf5;border:1px solid #45607f;border-radius:10px;padding:12px;font-size:12px;line-height:1.8;box-shadow:0 8px 30px #0005;display:none;white-space:nowrap}#tip strong{color:#46d8b3}footer{padding:14px 20px;border-top:1px solid #23324a}#range{width:100%;accent-color:#40d7b1}label{font-size:12px;color:#91a3bd}@media(max-width:600px){body{padding:12px}h1{font-size:23px}canvas{height:460px}.stats{gap:14px}.stat b{font-size:15px}}
+</style>
+<main>
+<div class="eyebrow">HYPERLIQUID / MARKET RESEARCH</div>
+<h1>__TITLE__ <span>1 минута</span></h1>
+<div class="muted">Сохранённые рыночные данные · цены в USDC · только завершённые свечи</div>
+<div class="muted">__NOTICE__</div>
+<p id="loading" class="muted" role="status">Загружаю свечи…</p>
+<section class="panel">
+<div class="toolbar"><div id="period" class="muted"></div><div><select id="zone" aria-label="Часовой пояс"><option value="Europe/Moscow">Москва · UTC+3</option><option value="UTC">UTC</option></select> <button id="in" aria-label="Приблизить">＋</button> <button id="out" aria-label="Отдалить">−</button> <button id="all">Весь период</button> <button id="save">Сохранить график</button></div></div>
+<div class="stats" id="stats"></div>
+<div id="wrap"><canvas id="chart" role="img" aria-label="Свечной график. Шкалы цен слева и справа, время снизу. Наведите указатель для точных цен."></canvas><div id="tip"></div></div>
+<footer><label for="range">Положение в истории</label><input id="range" type="range" min="0" value="0" step="1"><div class="muted">Колесо мыши / ＋ − — масштаб · потяните график — перемещение · наведите на свечу — точные цены · двойной щелчок — весь период. Данные не обновляются автоматически.</div></footer>
+</section>
+<noscript>Для интерактивного графика включите JavaScript в браузере.</noscript>
+</main>
+<script>
+(async()=>{
+'use strict';
+let loadError='';
+const rows=await(async()=>{try{
+ const payload=__CANDLES__;
+ const row=r=>Array.isArray(r)?{timestamp_ms:r[0],open:r[1],high:r[2],low:r[3],close:r[4],volume:r[5]}:r;
+ if(Array.isArray(payload))return payload.map(row);
+ if(!('DecompressionStream' in window))throw new Error('Для этого файла нужен современный Chrome, Edge или Firefox.');
+ const bytes=Uint8Array.from(atob(payload.data),c=>c.charCodeAt(0));
+ const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+ const data=JSON.parse(await new Response(stream).text());
+ if(payload.format==='rows-gzip-v1')return data.map(row);
+ if(payload.format!=='delta-gzip-v1')throw new Error('Неизвестный формат данных.');
+ let t=data.base,close=0;return data.deltas.map(r=>{t+=r[0]*60000;const bar={timestamp_ms:t,open:(close+r[1])/data.scale,high:(close+r[2])/data.scale,low:(close+r[3])/data.scale,close:(close+r[4])/data.scale,volume:r[5]};close+=r[4];return bar;});
+}catch(error){if(!(error instanceof ReferenceError))loadError=error.message;return [];}})();
+document.querySelector('#loading').style.display='none';
+if(!rows.length){
+ document.title='Шаблон графика — данные ещё не загружены';
+ document.querySelector('main').innerHTML='<h1>Данные графика не загружены</h1><p id="load-message" class="muted"></p><button id="save-template">Сохранить страницу</button>';
+ document.querySelector('#load-message').textContent=loadError||'Это шаблон без свечей. Откройте созданный файл графика из папки data или сначала обработайте архив Parquet.';
+ document.querySelector('#save-template').onclick=()=>{const url=URL.createObjectURL(new Blob(['<!doctype html>\\n'+document.documentElement.outerHTML],{type:'text/html;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='chart_template.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);};
+}else{
+document.querySelector('#save').onclick=()=>{const source='<!doctype html>\n'+document.documentElement.outerHTML;const url=URL.createObjectURL(new Blob([source],{type:'text/html;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download='Brent_Oil_Chart.html';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);};
+const canvas=document.querySelector('#chart'),ctx=canvas.getContext('2d'),tip=document.querySelector('#tip'),range=document.querySelector('#range'),zone=document.querySelector('#zone');
+let count=Math.min(120,rows.length),start=rows.length-count,hover=null,drag=null,geometry;
+const price=n=>n.toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:6});
+const date=t=>new Intl.DateTimeFormat('ru-RU',{timeZone:zone.value,day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(t);
+function stats(r){document.querySelector('#stats').innerHTML=[['Открытие',r.open],['Максимум · верх тени',r.high],['Минимум · низ тени',r.low],['Закрытие',r.close],['Объём',r.volume]].map(([label,value])=>`<div class="stat">${label}<b>${price(value)}</b></div>`).join('');}
+function draw(){
+ count=Math.max(1,Math.min(rows.length,Math.round(count)));start=Math.max(0,Math.min(rows.length-count,Math.round(start)));
+ const w=canvas.clientWidth,h=canvas.clientHeight,dpr=window.devicePixelRatio||1;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+ const left=w<600?66:86,right=w-left,top=24,bottom=h-45,pw=right-left,ph=bottom-top;
+ const visible=rows.slice(start,start+count);let lo=Infinity,hi=-Infinity;for(const r of visible){lo=Math.min(lo,r.low);hi=Math.max(hi,r.high);}const pad=(hi-lo||hi*.001||1)*.12;lo-=pad;hi+=pad;
+ const y=p=>bottom-(p-lo)/(hi-lo)*ph,step=pw/count,x=i=>left+(i-start+.5)*step;
+ geometry={w,h,left,right,top,bottom,pw,ph,lo,hi,y,x,step};
+ ctx.fillStyle='#101a2a';ctx.fillRect(0,0,w,h);ctx.font='11px system-ui';
+ for(let j=0;j<=6;j++){const p=lo+(hi-lo)*j/6,yy=y(p);ctx.strokeStyle='#233149';ctx.beginPath();ctx.moveTo(left,yy);ctx.lineTo(right,yy);ctx.stroke();ctx.fillStyle='#91a3bd';ctx.textAlign='right';ctx.fillText(p.toFixed(2),left-10,yy+4);ctx.textAlign='left';ctx.fillText(p.toFixed(2),right+10,yy+4);}
+ const ticks=Math.max(1,Math.floor(pw/145));for(let j=0;j<=ticks;j++){const i=start+Math.min(count-1,Math.floor(j*(count-1)/ticks)),xx=x(i);ctx.strokeStyle='#1d2a40';ctx.beginPath();ctx.moveTo(xx,top);ctx.lineTo(xx,bottom);ctx.stroke();ctx.textAlign='center';ctx.fillStyle='#91a3bd';ctx.fillText(date(rows[i].timestamp_ms),Math.max(left+45,Math.min(right-45,xx)),h-16);}
+ ctx.save();ctx.beginPath();ctx.rect(left,top,pw,ph);ctx.clip();
+ visible.forEach((r,j)=>{const xx=x(start+j);ctx.fillStyle=ctx.strokeStyle=r.close>=r.open?'#40d7b1':'#f27586';ctx.beginPath();ctx.moveTo(xx,y(r.high));ctx.lineTo(xx,y(r.low));ctx.stroke();ctx.fillRect(xx-Math.max(1,step*.62)/2,Math.min(y(r.open),y(r.close)),Math.max(1,step*.62),Math.max(1,Math.abs(y(r.open)-y(r.close))));});
+ const last=visible[visible.length-1];ctx.setLineDash([4,4]);ctx.strokeStyle='#6e93b4';ctx.beginPath();ctx.moveTo(left,y(last.close));ctx.lineTo(right,y(last.close));ctx.stroke();ctx.setLineDash([]);
+ if(hover&&hover.i>=start&&hover.i<start+count){const r=rows[hover.i],xx=x(hover.i),yy=Math.max(top,Math.min(bottom,hover.y));ctx.strokeStyle='#c2cfe6';ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(xx,top);ctx.lineTo(xx,bottom);ctx.moveTo(left,yy);ctx.lineTo(right,yy);ctx.stroke();ctx.setLineDash([]);
+ for(const [value,label] of [[r.high,'Макс'],[r.low,'Мин']]){const ty=y(value);ctx.fillStyle='#e2ecfb';ctx.beginPath();ctx.arc(xx,ty,3,0,Math.PI*2);ctx.fill();ctx.font='bold 12px system-ui';const text=`${label} ${price(value)}`,tw=ctx.measureText(text).width;let tx=xx+9;if(tx+tw>right)tx=xx-tw-9;ctx.fillStyle='#101a2a';ctx.fillRect(tx-3,ty-16,tw+6,18);ctx.fillStyle='#e2ecfb';ctx.textAlign='left';ctx.fillText(text,tx,ty-3);}
+ stats(r);
+ }else stats(last);
+ ctx.restore();
+ if(hover){const yy=Math.max(top,Math.min(bottom,hover.y)),p=hi-(yy-top)/ph*(hi-lo);ctx.fillStyle='#d1e3f7';ctx.fillRect(0,yy-10,left-3,20);ctx.fillRect(right+3,yy-10,w-right,20);ctx.fillStyle='#0a1423';ctx.textAlign='right';ctx.fillText(price(p),left-9,yy+4);ctx.textAlign='left';ctx.fillText(price(p),right+9,yy+4);}
+ range.max=rows.length-count;range.value=start;range.disabled=count===rows.length;document.querySelector('#period').textContent=`${date(visible[0].timestamp_ms)} — ${date(last.timestamp_ms)} · ${count} свечей`;
+}
+function zoom(factor,anchor=.5){const next=Math.min(rows.length,Math.max(Math.min(10,rows.length),Math.round(count*factor)));start+=Math.round((count-next)*anchor);count=next;hover=null;tip.style.display='none';draw();}
+function position(event){const box=canvas.getBoundingClientRect();return {x:event.clientX-box.left,y:event.clientY-box.top};}
+canvas.addEventListener('pointermove',e=>{const p=position(e);if(drag){start=drag.start-Math.round((p.x-drag.x)/geometry.step);hover=null;tip.style.display='none';draw();return;}const g=geometry;if(p.x<g.left||p.x>g.right||p.y<g.top||p.y>g.bottom){hover=null;tip.style.display='none';draw();return;}const i=Math.min(rows.length-1,start+Math.floor((p.x-g.left)/g.step));hover={i,y:p.y};const r=rows[i];tip.innerHTML=`<strong>${date(r.timestamp_ms)}</strong><br>Открытие: ${price(r.open)}<br>Максимум: ${price(r.high)}<br>Минимум: ${price(r.low)}<br>Закрытие: ${price(r.close)}<br>Объём: ${price(r.volume)}`;tip.style.display='block';tip.style.left=Math.max(4,Math.min(g.w-tip.offsetWidth-4,p.x+18))+'px';tip.style.top=(p.y>g.h/2?20:g.h-tip.offsetHeight-55)+'px';draw();});
+canvas.addEventListener('pointerleave',()=>{hover=null;tip.style.display='none';draw();});
+canvas.addEventListener('pointerdown',e=>{drag={x:position(e).x,start};canvas.setPointerCapture(e.pointerId);canvas.style.cursor='grabbing';});
+function release(){drag=null;canvas.style.cursor='crosshair';}canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);
+canvas.addEventListener('wheel',e=>{e.preventDefault();const p=position(e);zoom(e.deltaY>0?1.25:.8,Math.max(0,Math.min(1,(p.x-geometry.left)/geometry.pw)));},{passive:false});
+function all(){count=rows.length;start=0;hover=null;tip.style.display='none';draw();}
+canvas.addEventListener('dblclick',all);document.querySelector('#all').onclick=all;document.querySelector('#in').onclick=()=>zoom(.7);document.querySelector('#out').onclick=()=>zoom(1.4);range.oninput=()=>{start=Number(range.value);hover=null;tip.style.display='none';draw();};zone.onchange=()=>{hover=null;tip.style.display='none';draw();};new ResizeObserver(draw).observe(canvas);canvas.style.cursor='crosshair';draw();
+}
+})().catch(error=>{const status=document.querySelector('#loading');if(status){status.style.display='block';status.textContent='Не удалось открыть график: '+error.message;}});
+</script>
+</html>
