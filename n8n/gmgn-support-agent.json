@@ -1,0 +1,107 @@
+{
+  "name": "GMGN support — approval and journal",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual",
+      "name": "Manual start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        260,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      },
+      "id": "schedule",
+      "name": "Every five minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        260,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "privateKey",
+        "resource": "command",
+        "operation": "execute",
+        "command": "timeout 190 /home/codex/my-project-work/.venv-support/bin/python -m telegram_support.worker",
+        "cwd": "/home/codex/my-project-work"
+      },
+      "id": "ssh",
+      "name": "Support agent tick",
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        540,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => {\n  const result = item.json;\n  let journal;\n  try { journal = JSON.parse(result.stdout || '{}'); }\n  catch (_) { throw new Error('Worker returned no readable journal; inspect SSH status.'); }\n  if (result.code !== 0) {\n    throw new Error('Support worker blocked: ' + (journal.error_type || 'SSH or process failure'));\n  }\n  return {json: journal};\n});"
+      },
+      "id": "journal",
+      "name": "Agent journal",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        820,
+        320
+      ]
+    }
+  ],
+  "connections": {
+    "Manual start": {
+      "main": [
+        [
+          {
+            "node": "Support agent tick",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every five minutes": {
+      "main": [
+        [
+          {
+            "node": "Support agent tick",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Support agent tick": {
+      "main": [
+        [
+          {
+            "node": "Agent journal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {},
+  "tags": []
+}

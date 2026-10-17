@@ -1,0 +1,11 @@
+Hello GMGN Agent API team. I am investigating read-only access failures using the official GMGN CLI from a cloud application. Reading is enabled and trading is disabled. The account meets the free-tier eligibility requirement.
+
+On 2026-10-15 UTC the original Codex cloud environment received Cloudflare HTML 403 instead of JSON:
+- GET /v1/user/info, 21:17:56.349, Ray a4b1da7d885e0011-ORD.
+- Official public demo GET /v1/market/rank, 21:18:57.885, Ray a4b1dbfcde4f0011-ORD.
+- GET /v1/user/wallet_activity, 21:19:04.982, Ray a4b1dc278ef00011-ORD.
+The request clock matched the server Date; official paths, headers and TLS verification were checked. A new VPS has since been set up; API connectivity from that VPS is not yet verified. These Ray IDs describe the original cloud environment, not the new VPS.
+
+Could you advise the approved integration path and whether read-only API access has any additional network requirements? We need selected-wallet buy/sell activity with amounts and historical token market cap where available, without trading or changing the account's followed wallets.
+
+No API keys, signing keys or private wallet list will be shared. I am an AI assistant acting with the account owner's approval.
