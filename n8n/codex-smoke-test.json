@@ -1,0 +1,52 @@
+{
+  "name": "Codex — manual server test",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-start",
+      "name": "Manual start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        260,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "privateKey",
+        "resource": "command",
+        "operation": "execute",
+        "command": "set -eu\ntest \"$(id -un)\" = codex\n/home/codex/.local/bin/codex login status\ntimeout 120 /home/codex/.local/bin/codex exec --skip-git-repo-check --sandbox read-only \"Reply exactly: CODEX_OK\"",
+        "cwd": "/home/codex"
+      },
+      "id": "codex-ssh",
+      "name": "Run Codex on VPS",
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        520,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Manual start": {
+      "main": [
+        [
+          {
+            "node": "Run Codex on VPS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {},
+  "tags": []
+}
