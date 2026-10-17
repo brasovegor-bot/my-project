@@ -1,7 +1,8 @@
 # Codex CLI on a separate VPS
 
 The VPS is a separate machine from the Codex chat workspace. This chat has no
-authenticated SSH connection to it. The owner's private SSH key remains on Windows.
+authenticated SSH connection to it. The owner's private SSH key was created on
+Windows and entered by the owner in n8n Credentials for the SSH connection.
 Do not request that key, its passphrase, or device-login codes in chat.
 
 ## Verified by the owner
@@ -31,13 +32,13 @@ ChatGPT device-code login must be enabled in the same account's security setting
 Use a fresh code after enabling it. OAuth state stays in the VPS user's home;
 never copy authentication files into GitHub, n8n workflow JSON or execution logs.
 
-## Next: SSH from n8n
+## SSH from n8n: live node test verified
 
-`codex` was created with no password and currently has no confirmed SSH key
-installation. Do not try n8n password authentication or assume root's login key
-automatically authorizes another user. Install an owner's public key for `codex`
-as root, preserving any existing authorized keys, then test a second SSH session
-as `codex` before closing the working root session. Permissions must be 0700 for
+`codex` was created with no password. The owner installed the root-authorized
+public key in this user's previously unconfigured authorized_keys. The first
+n8n test returned code 0, stdout `codex`, empty stderr for `whoami`.
+Do not assume that root's login key automatically authorizes another user on
+other installations. Preserve any existing authorized keys. Permissions must be 0700 for
 `/home/codex/.ssh`, 0600 for `authorized_keys`, both owned by `codex:codex`.
 
 Import `n8n/codex-smoke-test.json` into n8n, or create equivalent Manual Trigger
@@ -59,8 +60,20 @@ A green n8n node alone does not prove the remote command succeeded; n8n SSH can
 return a nonzero remote exit code as output. Timeout also means failure, not success.
 
 Node parameter names were checked against upstream `n8n-io/n8n`'s
-`packages/nodes-base/nodes/Ssh/Ssh.node.ts`. This workflow has not yet been imported
-or executed in the owner's n8n. Connect and verify it before reporting readiness.
+`packages/nodes-base/nodes/Ssh/Ssh.node.ts`.
+
+On October 18, 2026 (Moscow), the owner's screenshot verified a manually configured
+SSH node executing the 120-second read-only Codex test: code 0, stdout `CODEX_OK`.
+The command ran as `codex` from `/home/codex`, codex-cli 0.163.0, using ChatGPT
+authentication. stderr contained diagnostic logging and a warning about missing
+system bubblewrap; the CLI reported using its bundled bubblewrap. That warning
+did not prevent this test. It does not establish an isolation guarantee for other
+tasks. No new installation is required just to repeat this already successful test.
+
+The JSON template itself has not been imported or run in the owner's n8n.
+The screenshot still shows `No input connected`; connection of Manual Trigger
+to SSH and execution of the complete workflow remain unverified. Do not conflate
+successful Execute step with a connected or published workflow.
 
 This is not a durable job runner or an always-running agent. Later work must add
 job status, retry policy, concurrent-job bounds, outbound-message approvals and
