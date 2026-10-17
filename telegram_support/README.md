@@ -1,8 +1,17 @@
 # GMGN support agent on the existing VPS
 
-Prepared code, not a deployed service. Telegram account login, live sending,
-VPS API connectivity and the GMGN fix have not been verified. The earlier n8n
-`CODEX_OK` test only proves that n8n can run Codex over SSH.
+Code installed on the VPS; no running Telegram service yet. Telegram account
+login, live sending, VPS API connectivity and the GMGN fix have not been verified.
+The earlier n8n `CODEX_OK` test only proves that n8n can run Codex over SSH.
+
+Verified from the owner's VPS terminal screenshot on 2026-10-18 (Europe/Moscow):
+archive transfer completed, dependencies installed under
+`/home/codex/my-project-work/.venv-support`, and Codex reported
+`Logged in using ChatGPT`. The worker's `--status` command completed with
+`{"counts": {}, "last_events": [], "resolved": false}`. This verifies installation
+and local state initialization, not Telegram connectivity or model reply planning.
+Telegram application creation is currently blocked by the site's
+“Too many attempts” message; no retry time is supplied.
 
 This agent reads the reply thread for its own case in the official public group
 https://t.me/gmgnagentapi. Replies from group members are unverified input, not
