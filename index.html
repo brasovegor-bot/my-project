@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#183e35">
-  <meta name="description" content="Тест для новичков и опытных игроков в падел. 9 вопросов об опыте и игре, рейтинг от 1.0 до 5.0.">
+  <meta name="description" content="Адаптивный тест уровня игры в падел: 3 ветки, 15 вопросов в банке и 9 вопросов на прохождение. Рейтинг от 1.0 до 5.0.">
   <title>Padel Level Lab — узнай свой уровень</title>
   <style>
     :root { --ink:#183e35; --muted:#65766e; --paper:#f5f5ee; --white:#fffefa; --line:#dce2d7; --lime:#d6ef87; --orange:#dc7754; --soft:#edf1e7; --radius:24px; }
@@ -72,6 +72,7 @@
     .step.done { background:var(--lime); color:var(--ink); border-color:var(--lime); }
     .step.current { background:var(--ink); color:var(--white); border-color:var(--ink); }
     .sidebar-note { border-top:1px solid var(--line); padding-top:20px; }
+    .route-label { margin:16px 0 8px; padding:10px 12px; border-radius:10px; background:var(--soft); color:var(--ink); font-size:12px; line-height:1.5; }
     .question-card { background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:34px; }
     .question-meta { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:23px; }
     .question-meta .eyebrow { margin:0; }
@@ -204,7 +205,7 @@
   <div class="shell">
     <header class="header">
       <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 0 0 0 20M12 2a10 10 0 0 1 0 20M3 8c5 1 6 7 3 12M21 4c-6 2-7 9-2 15"/></svg></span> PADEL LEVEL LAB</div>
-      <div class="header-actions"><span class="badge">Песочница · v3.1</span><button class="text-button" type="button" id="download-test">Получить HTML ↓</button></div>
+      <div class="header-actions"><span class="badge">Песочница · v4.0</span><button class="text-button" type="button" id="download-test">Получить HTML ↓</button></div>
     </header>
     <main id="app">
       <section class="panel file-help" aria-labelledby="file-help-title">
@@ -215,7 +216,7 @@
       </section>
     </main>
     <noscript><p>Тесту нужен JavaScript. Откройте веб-страницу теста в Safari или Chrome с включённым JavaScript.</p></noscript>
-    <footer class="footer"><span>9 вопросов. Для новичков и опытных игроков.</span><span>Самооценка · Собственная шкала 1.0–5.0 · Не официальный рейтинг</span></footer>
+    <footer class="footer"><span>3 ветки · 9 вопросов для каждого игрока.</span><span>Самооценка · Собственная шкала 1.0–5.0 · Не официальный рейтинг</span></footer>
   </div>
   <dialog id="copy-dialog" aria-labelledby="copy-dialog-title">
     <h2 id="copy-dialog-title">Ваш результат</h2>
@@ -243,7 +244,7 @@
   </dialog>
   <script>
     'use strict';
-    const TEST_VERSION = 'padel-level-lab-3.1';
+    const TEST_VERSION = 'padel-level-lab-4.0';
     const LETTERS = ['A', 'B', 'C', 'D', 'E'];
     const QUESTIONS = [
       {
@@ -350,16 +351,91 @@
           'В матчах вовремя подхожу к отскоку, атакую в выбранную зону и готовлю следующий удар.',
           'При быстрой игре читаю отскок и позицию соперников, точно направляю мяч в ноги или свободное место и продолжаю атаку.'
         ]
+      },
+      {
+        id:'starter-contact', short:'Контакт с мячом', weight:1, group:'easy',
+        title:'Легко ли вам попасть ракеткой по спокойному удобному мячу?',
+        options:[
+          'Пока часто промахиваюсь или только собираюсь попробовать игру.',
+          'Иногда попадаю удачно, но контакт с мячом ещё непредсказуемый.',
+          'Регулярно попадаю по спокойному мячу, но не всегда возвращаю его через сетку.',
+          'Уверенно возвращаю удобный мяч через сетку справа и слева.',
+          'На обычной скорости хорошо контролирую контакт и могу направить удобный мяч.'
+        ]
+      },
+      {
+        id:'starter-direction', short:'Направление простого удара', weight:1, group:'easy',
+        title:'Получается ли направить простой мяч в выбранную сторону?',
+        options:[
+          'Пока стараюсь просто коснуться мяча; направление не выбираю.',
+          'Иногда попадаю в нужную сторону, но чаще мяч летит случайно.',
+          'С удобного мяча могу выбрать левую или правую половину корта.',
+          'Обычно направляю спокойный мяч в выбранную половину и контролирую силу.',
+          'Уверенно направляю удобные мячи в разные зоны, делаю их короче или глубже.'
+        ]
+      },
+      {
+        id:'starter-recovery', short:'Готовность к следующему мячу', weight:1, group:'easy',
+        title:'После своего удара успеваете ли вы подготовиться к следующему мячу?',
+        options:[
+          'Обычно остаюсь на месте и поздно замечаю следующий мяч.',
+          'Вспоминаю о подготовке, но часто начинаю двигаться слишком поздно.',
+          'После спокойного удара возвращаюсь в удобное место и поднимаю ракетку.',
+          'Обычно успеваю восстановить позицию, смотрю на соперника и готовлю ракетку.',
+          'Регулярно готовлюсь к следующему удару заранее, даже если пришлось побежать за мячом.'
+        ]
+      },
+      {
+        id:'developing-low', short:'Низкие и неудобные мячи', weight:2, group:'game',
+        title:'Как вы возвращаете низкий мяч, к которому приходится подбежать?',
+        options:[
+          'Чаще всего не успеваю к мячу или не могу его вернуть.',
+          'Иногда успеваю, но обычно отправляю мяч в сетку или за корт.',
+          'На спокойной скорости возвращаю такой мяч, но часто оставляю сопернику удобную атаку.',
+          'В матчах подхожу ногами, возвращаю мяч с запасом и стараюсь восстановить позицию.',
+          'При быстрой игре сохраняю контроль низкого мяча и выбираю высоту и глубину ответа.'
+        ]
+      },
+      {
+        id:'developing-net', short:'Простая игра у сетки', weight:2, group:'game',
+        title:'Получается ли у сетки вернуть мяч до его отскока от пола?',
+        explanation:'Вспомните короткие удары рядом с сеткой: успеваете ли подставить ракетку и сохранить контроль?',
+        options:[
+          'Пока избегаю таких ударов или часто ошибаюсь даже на удобном мяче.',
+          'Возвращаю простой медленный мяч, но быстрые мячи вызывают трудности.',
+          'На средней скорости играю справа и слева, но низкие мячи часто поднимаю под атаку.',
+          'В матчах делаю короткое движение ракеткой и направляю ответ, в том числе с неудобного мяча.',
+          'При быстрой игре меняю направление и глубину, смягчаю сильные мячи и удерживаю позицию у сетки.'
+        ]
+      },
+      {
+        id:'developing-high', short:'Контроль высокого мяча', weight:2, group:'game',
+        title:'Получается ли вернуть высокий мяч над головой, сохраняя равновесие?',
+        options:[
+          'Часто промахиваюсь или стараюсь пропустить мяч назад.',
+          'Возвращаю удобный высокий мяч, но плохо контролирую направление.',
+          'Из спокойной позиции направляю мяч через сетку, но при отходе назад часто ошибаюсь.',
+          'В матчах успеваю переместиться под высокий мяч, направляю ответ и возвращаюсь вперёд.',
+          'Даже при глубоком высоком мяче и в движении сохраняю контроль, выбираю направление и удобную позицию.'
+        ]
       }
     ];
 
-    const QUESTION_COUNT = QUESTIONS.length;
-    const MAX_POINTS = QUESTIONS.reduce((total, question) => total + 4 * question.weight, 0);
+    const QUESTION_COUNT = 9;
+    const QUESTION_BY_ID = Object.fromEntries(QUESTIONS.map(question => [question.id, question]));
+    const SHARED_IDS = ['experience','rally','serve-return','positioning','glass-defense','lob'];
+    const BRANCHES = {
+      beginner:{id:'beginner',number:1,name:'Первые шаги',condition:'Оба первых ответа — A или B',tailIds:['starter-contact','starter-direction','starter-recovery'],keySkillIds:['rally','glass-defense','lob']},
+      developing:{id:'developing',number:2,name:'Уверенная база',condition:'Ровно один из первых ответов — A или B',tailIds:['developing-low','developing-net','developing-high'],keySkillIds:['rally','glass-defense','lob']},
+      standard:{id:'standard',number:3,name:'Полный тест',condition:'Оба первых ответа — C, D или E',tailIds:['volley','bandeja','bajada'],keySkillIds:['glass-defense','lob','volley']}
+    };
+    const TAIL_IDS = Object.values(BRANCHES).flatMap(branch => branch.tailIds);
+    const MAX_POINTS = [...SHARED_IDS,...BRANCHES.standard.tailIds].reduce((total,id) => total + 4 * QUESTION_BY_ID[id].weight, 0);
     const SCORING = Object.freeze({ fundamentalsShare:0.2, exponent:1.25 });
 
     const app = document.getElementById('app');
     const INITIAL_MARKUP = app.innerHTML;
-    let answers = Array(QUESTIONS.length).fill(null);
+    let answers = createAnswers();
     let currentQuestion = 0;
     let completedAt = null;
     let feedback = { name:'', knownRating:'', comment:'' };
@@ -368,16 +444,48 @@
       return String(value).replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
     }
 
+    function createAnswers() {
+      return Object.fromEntries(QUESTIONS.map(question => [question.id,null]));
+    }
+
+    function isAnswer(value) {
+      return Number.isInteger(value) && value >= 0 && value <= 4;
+    }
+
+    function getBranch(responses = answers) {
+      if (!responses || !isAnswer(responses.experience) || !isAnswer(responses.rally)) return null;
+      const lowCount = Number(responses.experience <= 1) + Number(responses.rally <= 1);
+      return lowCount === 2 ? BRANCHES.beginner : lowCount === 1 ? BRANCHES.developing : BRANCHES.standard;
+    }
+
+    function getActiveQuestions(responses = answers) {
+      const branch = getBranch(responses);
+      return (branch ? [...SHARED_IDS,...branch.tailIds] : SHARED_IDS.slice(0,2)).map(id => QUESTION_BY_ID[id]);
+    }
+
+    function recordAnswer(id,value) {
+      if (!QUESTION_BY_ID[id] || !isAnswer(value)) throw new Error('Некорректный ответ.');
+      const previousBranch = getBranch(answers)?.id;
+      answers[id] = value;
+      if (previousBranch !== getBranch(answers)?.id) {
+        TAIL_IDS.forEach(tailId => { answers[tailId] = null; });
+      }
+      completedAt = null;
+    }
+
     function calculateResult(selectedAnswers) {
-      if (!Array.isArray(selectedAnswers) || selectedAnswers.length !== QUESTION_COUNT || !Array.from(selectedAnswers).every(value => Number.isInteger(value) && value >= 0 && value <= 4)) {
+      const branch = getBranch(selectedAnswers);
+      const questions = getActiveQuestions(selectedAnswers);
+      if (!branch || questions.length !== QUESTION_COUNT || !questions.every(question => isAnswer(selectedAnswers[question.id]))) {
         throw new Error(`Для расчёта нужно ответить на все ${QUESTION_COUNT} вопросов.`);
       }
-      const weightedPoints = selectedAnswers.reduce((total, value, index) => total + value * QUESTIONS[index].weight, 0);
-      const weakestFoundationPoints = Math.min(...selectedAnswers.filter((value,index) => QUESTIONS[index].foundation));
+      const weightedPoints = questions.reduce((total,question) => total + selectedAnswers[question.id] * question.weight, 0);
+      const availableMaxPoints = questions.reduce((total,question) => total + 4 * question.weight, 0);
+      const weakestFoundationPoints = Math.min(...branch.keySkillIds.map(id => selectedAnswers[id]));
       const normalizedWeightedScore = weightedPoints / MAX_POINTS;
       const effectiveScore = (1 - SCORING.fundamentalsShare) * normalizedWeightedScore + SCORING.fundamentalsShare * weakestFoundationPoints / 4;
       const rating = Math.round((1 + 4 * Math.pow(effectiveScore, SCORING.exponent)) * 10) / 10;
-      return { weightedPoints, maxPoints:MAX_POINTS, normalizedWeightedScore, weakestFoundationPoints, effectiveScore, rating };
+      return { branchId:branch.id,branchName:branch.name,weightedPoints,availableMaxPoints,maxPoints:MAX_POINTS,normalizedWeightedScore,weakestFoundationPoints,effectiveScore,rating };
     }
 
     function focusHeading() {
@@ -391,9 +499,9 @@
           <div>
             <span class="eyebrow">Найдите свой уровень игры</span>
             <h1 id="intro-title" tabindex="-1">Ваш падел.<br>Ваша <span>точка<br>отсчёта.</span></h1>
-            <p class="lead">Только знакомитесь с паделом или уже уверенно играете? Ответьте на ${QUESTION_COUNT} вопросов об опыте и игре и получите предварительный рейтинг.</p>
+            <p class="lead">Ответьте на два первых вопроса — подберём подходящий маршрут. Всего ${QUESTION_COUNT} вопросов, чтобы определить вашу точку отсчёта в паделе.</p>
             <button type="button" class="button" id="start-test">Узнать свой уровень <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></button>
-            <p class="micro">Без регистрации · Для новичков и опытных игроков</p>
+            <p class="micro">3 ветки · ${QUESTIONS.length} вопросов в банке · ${QUESTION_COUNT} на вашем пути</p>
             <div class="stats"><div class="stat"><strong>${QUESTION_COUNT}</strong><span>вопросов об игре</span></div><div class="stat"><strong>≈ 3 мин</strong><span>на прохождение</span></div><div class="stat"><strong>1.0–5.0</strong><span>рейтинг с шагом 0.1</span></div></div>
           </div>
           <div class="court-card" aria-hidden="true">
@@ -414,30 +522,36 @@
           </div>
         </section>
         <details class="method"><summary>Как работает этот тест?</summary>
-          <p>Первые четыре вопроса — об опыте, розыгрыше, подаче и перемещении. Затем — игра после стекла и свеча. В трёх последних вопросах встречаются названия ударов: под каждым есть простое объяснение. Даже если вы только начинаете, для вас есть подходящий вариант ответа.</p>
+          <p>Первые два вопроса определяют маршрут. Если оба ответа — A или B, выбирается ветка «Первые шаги». Если ровно один — A или B, выбирается «Уверенная база». Если оба ответа — C, D или E, выбирается «Полный тест».</p>
+          <p>В банке ${QUESTIONS.length} вопросов, каждый проходит ${QUESTION_COUNT}. Вопросы 1–6 общие: опыт, розыгрыш, подача, перемещение, стекло и свеча. Последние три зависят от ветки. В первых двух ветках нет вопросов с названиями «бандеха» и «бахада».</p>
           <p>В игровых вопросах ориентируйтесь на последние пять матчей, включая ошибки. Если играли меньше, отвечайте по имеющемуся опыту. Выбирайте то, что получается регулярно; если сомневаетесь между вариантами, выбирайте более низкий.</p>
-          <p>Ответы A–E дают от 0 до 4 баллов. У общих вопросов 1–4 вес ×1, у игровых вопросов 5–9 — ×3. Поэтому опыт и простые навыки дают около 21% суммы с весами. Максимум — ${MAX_POINTS} баллов.</p>
-          <p>Индекс навыков: 80% от суммы с весами и 20% от самого слабого ключевого навыка — игры после стекла, свечи или удара с лёта (вопросы 5–7). Затем применяется кривая: <code>Рейтинг = округлить до десятых (1 + 4 × индекс^${SCORING.exponent})</code>.</p>
-          <p>Все ответы C дают 2.7. Если выбрать E в первых четырёх вопросах и C в остальных, получится 3.0. Высокий рейтинг требует уверенных ответов на игровые вопросы. Доступны все 41 значение от 1.0 до 5.0.</p>
-          <p>В версии 3.1 коэффициент кривой смягчён с 1.5 до ${SCORING.exponent}: средние результаты стали выше примерно на 0.2–0.3. Это экспериментальная самооценка по собственной шкале; коэффициенты ещё нужно проверить по матчам и оценкам тренеров. Итог нельзя напрямую приравнять к рейтингу другой платформы.</p>
+          <p>Ответы A–E дают от 0 до 4 баллов. Общие вопросы 1–4 имеют вес ×1, стекло и свеча — ×3. Последние три вопроса весят ×1 в первой ветке, ×2 во второй и ×3 в третьей. Простые вопросы подтверждают более ограниченный набор навыков.</p>
+          <p>Для сравнения веток используем общую базу ${MAX_POINTS} баллов. Индекс: 80% от суммы с весами и 20% от самого слабого ключевого навыка. В первых двух ветках ключевые навыки — розыгрыш, стекло и свеча; в третьей — стекло, свеча и воллей. <code>Рейтинг = округлить до десятых (1 + 4 × индекс^${SCORING.exponent})</code>.</p>
+          <p>Калибровка полного теста соответствует версии 3.1: все ответы C дают 2.7, максимальные ответы на первые четыре и C на остальные — 3.0. В простых ветках высокие ответы на лёгкие вопросы не приравниваются к владению сложной техникой.</p>
+          <p>Версия 4.0 — экспериментальная самооценка по собственной шкале. Веса новых вопросов ещё нужно проверить по матчам и оценкам тренеров. Итог нельзя напрямую приравнять к рейтингу другой платформы.</p>
           <p>Ответы хранятся только в памяти этой вкладки и исчезнут после обновления страницы. Тест ничего не отправляет на сервер. Результатом можно поделиться вручную.</p>
         </details>`;
       document.getElementById('start-test').addEventListener('click', () => { renderQuestion(); focusHeading(); });
     }
 
     function renderQuestion() {
-      const question = QUESTIONS[currentQuestion];
-      const answeredCount = answers.filter(answer => answer !== null).length;
+      const questions = getActiveQuestions();
+      const branch = getBranch();
+      if (currentQuestion >= questions.length) currentQuestion = 0;
+      const question = questions[currentQuestion];
+      const answeredCount = questions.filter(item => isAnswer(answers[item.id])).length;
+      const steps = Array.from({length:QUESTION_COUNT},(_,index) => questions[index] || null);
       app.innerHTML = `
         <div class="quiz-layout">
           <aside class="sidebar" aria-label="Прогресс теста">
             <span class="eyebrow">Ваш игровой профиль</span>
             <h2>Каждый удар<br>имеет значение.</h2>
-            <p>Отвечайте по обычной игре. Если только начинаете, выбирайте вариант, который ближе к вашему опыту.</p>
+            <p>Отвечайте по обычной игре. После первых двух ответов подберём подходящие вопросы.</p>
+            <div class="route-label" role="status">${branch ? `Ветка ${branch.number} · ${escapeHtml(branch.name)}` : 'Маршрут определится после двух ответов'}</div>
             <div class="progress-track" role="progressbar" aria-label="Вопросов отвечено" aria-valuemin="0" aria-valuemax="${QUESTION_COUNT}" aria-valuenow="${answeredCount}"><div class="progress-fill" style="width:${answeredCount / QUESTION_COUNT * 100}%"></div></div>
             <div class="micro" id="progress-caption">Отвечено ${answeredCount} из ${QUESTION_COUNT}</div>
-            <nav class="step-list" aria-label="Перейти к вопросу">${QUESTIONS.map((item,index) => `<button type="button" class="step ${answers[index] !== null ? 'done' : ''} ${index === currentQuestion ? 'current' : ''}" data-step="${index}" aria-label="Вопрос ${index+1}: ${escapeHtml(item.short)}${answers[index] !== null ? ', ответ выбран' : ''}" ${index === currentQuestion ? 'aria-current="step"' : ''}>${index+1}</button>`).join('')}</nav>
-            <p class="sidebar-note">Рейтинг будет доступен после всех ${QUESTION_COUNT} ответов. Любой ответ можно изменить.</p>
+            <nav class="step-list" aria-label="Перейти к вопросу">${steps.map((item,index) => `<button type="button" class="step ${item && isAnswer(answers[item.id]) ? 'done' : ''} ${index === currentQuestion ? 'current' : ''}" data-step="${index}" aria-label="Вопрос ${index+1}${item ? ': '+escapeHtml(item.short) : ' — после первых двух ответов'}" ${!item ? 'disabled' : ''} ${index === currentQuestion ? 'aria-current="step"' : ''}>${index+1}</button>`).join('')}</nav>
+            <p class="sidebar-note">Рейтинг будет доступен после всех ${QUESTION_COUNT} ответов. Если изменить первые ответы, маршрут может поменяться.</p>
           </aside>
           <section class="question-card" aria-labelledby="question-title">
             <div class="question-meta"><span class="eyebrow">Вопрос ${String(currentQuestion+1).padStart(2,'0')} / ${QUESTION_COUNT}</span><span class="weight">${question.group === 'easy' ? 'Общее' : question.group === 'technical' ? 'Техника' : 'Игра'} · Вес ×${question.weight}</span></div>
@@ -446,31 +560,36 @@
             <fieldset ${question.explanation ? 'aria-describedby="question-explanation"' : ''}>
               <legend class="sr-only">${escapeHtml(question.title)} Выберите один ответ.</legend>
               <div class="options">${question.options.map((option,index) => `
-                <label class="option"><input type="radio" name="answer" value="${index}" ${answers[currentQuestion] === index ? 'checked' : ''}><span class="letter" aria-hidden="true">${LETTERS[index]}</span><span class="option-text">${escapeHtml(option)}</span></label>`).join('')}
+                <label class="option"><input type="radio" name="answer" value="${index}" ${answers[question.id] === index ? 'checked' : ''}><span class="letter" aria-hidden="true">${LETTERS[index]}</span><span class="option-text">${escapeHtml(option)}</span></label>`).join('')}
               </div>
             </fieldset>
             <div class="question-nav">
               <button type="button" class="button secondary" id="previous">${currentQuestion === 0 ? 'К началу' : '← Назад'}</button>
-              <button type="button" class="button" id="next" ${answers[currentQuestion] === null ? 'disabled' : ''}>${currentQuestion === QUESTION_COUNT - 1 ? 'Мой результат' : 'Далее'} <span class="arrow" aria-hidden="true">→</span></button>
+              <button type="button" class="button" id="next" ${!isAnswer(answers[question.id]) ? 'disabled' : ''}>${currentQuestion === QUESTION_COUNT - 1 ? 'Мой результат' : 'Далее'} <span class="arrow" aria-hidden="true">→</span></button>
             </div>
             <p class="question-help">${question.id === 'experience' ? 'Выберите подходящий вариант опыта. Игровые навыки будут дальше.' : 'Оценивайте обычную игру. Если сомневаетесь между вариантами, выбирайте более низкий.'}</p>
           </section>
         </div>`;
 
       app.querySelectorAll('input[name="answer"]').forEach(input => input.addEventListener('change', event => {
-        answers[currentQuestion] = Number(event.target.value);
+        const value = Number(event.target.value);
+        recordAnswer(question.id,value);
+        if (question.id === 'experience' || question.id === 'rally') {
+          renderQuestion();
+          app.querySelector(`input[name="answer"][value="${value}"]`).focus({preventScroll:true});
+          return;
+        }
         document.getElementById('next').disabled = false;
-        const count = answers.filter(answer => answer !== null).length;
-        const progress = app.querySelector('[role="progressbar"]');
-        progress.setAttribute('aria-valuenow', count);
+        const count = getActiveQuestions().filter(item => isAnswer(answers[item.id])).length;
+        app.querySelector('[role="progressbar"]').setAttribute('aria-valuenow',count);
         app.querySelector('.progress-fill').style.width = `${count / QUESTION_COUNT * 100}%`;
         document.getElementById('progress-caption').textContent = `Отвечено ${count} из ${QUESTION_COUNT}`;
-        const step = app.querySelector(`[data-step="${currentQuestion}"]`);
-        step.classList.add('done');
-        step.setAttribute('aria-label', `Вопрос ${currentQuestion+1}: ${question.short}, ответ выбран`);
+        app.querySelector(`[data-step="${currentQuestion}"]`).classList.add('done');
       }));
       app.querySelectorAll('[data-step]').forEach(button => button.addEventListener('click', () => {
-        currentQuestion = Number(button.dataset.step); renderQuestion(); focusHeading();
+        const index = Number(button.dataset.step);
+        if (index >= getActiveQuestions().length) return;
+        currentQuestion = index; renderQuestion(); focusHeading();
       }));
       document.getElementById('previous').addEventListener('click', () => {
         if (currentQuestion === 0) renderIntro();
@@ -478,12 +597,16 @@
         focusHeading();
       });
       document.getElementById('next').addEventListener('click', () => {
-        if (answers[currentQuestion] === null) return;
-        if (currentQuestion < QUESTION_COUNT - 1) { currentQuestion++; renderQuestion(); }
-        else {
-          const missing = answers.findIndex(answer => answer === null);
+        if (!isAnswer(answers[question.id])) return;
+        const active = getActiveQuestions();
+        if (currentQuestion + 1 < active.length) {
+          currentQuestion++; renderQuestion();
+        } else {
+          const missing = active.findIndex(item => !isAnswer(answers[item.id]));
           if (missing !== -1) { currentQuestion = missing; renderQuestion(); }
-          else { completedAt = new Date().toISOString(); renderResult(); }
+          else if (getBranch() && active.length === QUESTION_COUNT) {
+            completedAt = new Date().toISOString(); renderResult();
+          }
         }
         focusHeading();
       });
@@ -491,9 +614,11 @@
 
     function renderResult() {
       const result = calculateResult(answers);
-      const weakestFoundationNames = QUESTIONS.filter((question,index) => question.foundation && answers[index] === result.weakestFoundationPoints).map(question => question.short).join(', ');
+      const branch = getBranch();
+      const questions = getActiveQuestions();
+      const weakestFoundationNames = branch.keySkillIds.filter(id => answers[id] === result.weakestFoundationPoints).map(id => QUESTION_BY_ID[id].short).join(', ');
       app.innerHTML = `
-        <div class="result-heading"><div><span class="eyebrow">${QUESTION_COUNT} из ${QUESTION_COUNT} · Тест пройден</span><h1 tabindex="-1">Ваша точка отсчёта.</h1></div></div>
+        <div class="result-heading"><div><span class="eyebrow">${QUESTION_COUNT} из ${QUESTION_COUNT} · Ветка ${branch.number}: ${escapeHtml(branch.name)}</span><h1 tabindex="-1">Ваша точка отсчёта.</h1></div></div>
         <div class="result-grid">
           <section class="score-card" aria-label="Результат теста">
             <span class="score-caption">Ваш предварительный рейтинг</span>
@@ -513,16 +638,17 @@
         </div>
         <div class="result-actions"><button type="button" class="button" id="copy-result">Скопировать результат <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></button><button type="button" class="button secondary" id="download-result">Скачать отчёт .json ↓</button></div>
         <div class="status" id="result-status" role="status" aria-live="polite"></div>
-        <details class="panel details"><summary>Разобрать результат · ${result.weightedPoints} из ${result.maxPoints} баллов</summary>
+        <details class="panel details"><summary>Разобрать результат · ${result.weightedPoints} из ${result.availableMaxPoints} баллов маршрута</summary>
           <div class="formula">
+            <p>Маршрут: <strong>${escapeHtml(branch.name)}</strong>. Доступно ${result.availableMaxPoints} баллов, общая база сравнения веток — ${result.maxPoints}.</p>
             <p>Минимум ключевых навыков: <strong>${result.weakestFoundationPoints} из 4</strong> — ${escapeHtml(weakestFoundationNames)}.</p>
             <p>Индекс = 0.8 × (${result.weightedPoints} ÷ ${result.maxPoints}) + 0.2 × (${result.weakestFoundationPoints} ÷ 4) ≈ ${result.effectiveScore.toFixed(3)}.</p>
             <p>Рейтинг = 1 + 4 × индекс^${SCORING.exponent} = <strong>${result.rating.toFixed(1)}</strong> после округления до десятых.</p>
           </div>
           <div class="table-wrap"><table><thead><tr><th scope="col">Навык</th><th scope="col">Ответ</th><th scope="col">Балл</th><th scope="col">Вес</th><th scope="col">Итого</th></tr></thead><tbody>
-            ${QUESTIONS.map((question,index) => `<tr><td>${index+1}. ${escapeHtml(question.short)}</td><td>${LETTERS[answers[index]]}</td><td>${answers[index]}</td><td>×${question.weight}</td><td>${answers[index]*question.weight} / ${4*question.weight}</td></tr>`).join('')}
-          </tbody><tfoot><tr><td colspan="4">Сумма с учётом весов</td><td>${result.weightedPoints} / ${result.maxPoints}</td></tr></tfoot></table></div>
-          <p class="micro">A = 0, B = 1, C = 2, D = 3, E = 4. Общие вопросы 1–4 имеют вес ×1, игровые 5–9 — ×3. В версии 3.1 минимум по ключевым вопросам 5–7 составляет 20% индекса, сумма с весами — 80%, коэффициент кривой — ${SCORING.exponent}. Показанный индекс округлён; расчёт использует полную точность. Коэффициенты требуют проверки на реальных матчах.</p>
+            ${questions.map((question,index) => `<tr><td>${index+1}. ${escapeHtml(question.short)}</td><td>${LETTERS[answers[question.id]]}</td><td>${answers[question.id]}</td><td>×${question.weight}</td><td>${answers[question.id]*question.weight} / ${4*question.weight}</td></tr>`).join('')}
+          </tbody><tfoot><tr><td colspan="4">Сумма с учётом весов</td><td>${result.weightedPoints} / ${result.availableMaxPoints}</td></tr></tfoot></table></div>
+          <p class="micro">A = 0, B = 1, C = 2, D = 3, E = 4. Учитываются только девять вопросов выбранного маршрута. Простой вопрос имеет меньший вес, поэтому сумма сравнивается с общей базой ${result.maxPoints}. Минимум ключевых навыков составляет 20% индекса, сумма с весами — 80%, коэффициент кривой — ${SCORING.exponent}. Коэффициенты новых веток требуют проверки на реальных матчах.</p>
         </details>
         <div class="restart-row"><button type="button" class="text-button" id="edit-answers">← Изменить ответы</button><button type="button" class="text-button" id="restart">Пройти заново</button></div>`;
 
@@ -538,7 +664,7 @@
       });
       document.getElementById('edit-answers').addEventListener('click', () => { currentQuestion = 0; renderQuestion(); focusHeading(); });
       document.getElementById('restart').addEventListener('click', () => {
-        answers = Array(QUESTIONS.length).fill(null); currentQuestion = 0; completedAt = null;
+        answers = createAnswers(); currentQuestion = 0; completedAt = null;
         feedback = {name:'',knownRating:'',comment:''}; renderQuestion(); focusHeading();
       });
     }
@@ -549,26 +675,32 @@
 
     function buildReport() {
       const result = calculateResult(answers);
+      const branch = getBranch();
+      const questions = getActiveQuestions();
       return {
         testVersion:TEST_VERSION,
         questionCount:QUESTION_COUNT,
+        bankQuestionCount:QUESTIONS.length,
+        branch:{id:branch.id,number:branch.number,name:branch.name,condition:branch.condition},
+        routingAnswers:{experience:LETTERS[answers.experience],rally:LETTERS[answers.rally]},
         completedAt,
         playerName:feedback.name.trim() || null,
         rating:result.rating,
         weightedPoints:result.weightedPoints,
         maxPoints:result.maxPoints,
+        availableMaxPoints:result.availableMaxPoints,
         weakestFoundationPoints:result.weakestFoundationPoints,
         normalizedWeightedScore:result.normalizedWeightedScore,
         effectiveScore:result.effectiveScore,
-        scoring:{...SCORING, keySkillQuestionIds:QUESTIONS.filter(question => question.foundation).map(question => question.id)},
+        scoring:{...SCORING,referenceMaxPoints:MAX_POINTS,keySkillQuestionIds:[...branch.keySkillIds]},
         formula:`round(1 + 4 * pow(0.8 * weightedPoints / maxPoints + 0.2 * weakestFoundationPoints / 4, ${SCORING.exponent}), 1)`,
         knownRating:feedback.knownRating === '' ? null : Number(feedback.knownRating),
         comment:feedback.comment.trim() || null,
-        answers:QUESTIONS.map((question,index) => ({
+        answers:questions.map((question,index) => ({
           questionNumber:index+1, questionId:question.id, question:question.title,
-          group:question.group, isKeySkill:Boolean(question.foundation),
-          answerLetter:LETTERS[answers[index]], answer:question.options[answers[index]],
-          points:answers[index], weight:question.weight, weightedPoints:answers[index]*question.weight
+          group:question.group, isKeySkill:branch.keySkillIds.includes(question.id),
+          answerLetter:LETTERS[answers[question.id]], answer:question.options[answers[question.id]],
+          points:answers[question.id], weight:question.weight, weightedPoints:answers[question.id]*question.weight
         }))
       };
     }
@@ -580,7 +712,8 @@
         'PADEL LEVEL LAB · предварительный рейтинг',
         report.playerName ? `Игрок: ${report.playerName}` : '',
         `Рейтинг: ${report.rating.toFixed(1)} / 5.0`,
-        `Баллы: ${report.weightedPoints} / ${report.maxPoints}`,
+        `Ветка ${report.branch.number}: ${report.branch.name}`,
+        `Баллы маршрута: ${report.weightedPoints} / ${report.availableMaxPoints}; общая база: ${report.maxPoints}`,
         `Минимум ключевых навыков: ${report.weakestFoundationPoints} / 4`,
         report.knownRating !== null ? `Известный уровень (самооценка игрока): ${report.knownRating.toFixed(1)}` : '',
         report.comment ? `Комментарий: ${report.comment}` : '',
