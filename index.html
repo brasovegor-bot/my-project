@@ -204,7 +204,7 @@
   <div class="shell">
     <header class="header">
       <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 0 0 0 20M12 2a10 10 0 0 1 0 20M3 8c5 1 6 7 3 12M21 4c-6 2-7 9-2 15"/></svg></span> PADEL LEVEL LAB</div>
-      <div class="header-actions"><span class="badge">Песочница · v3.0</span><button class="text-button" type="button" id="download-test">Получить HTML ↓</button></div>
+      <div class="header-actions"><span class="badge">Песочница · v3.1</span><button class="text-button" type="button" id="download-test">Получить HTML ↓</button></div>
     </header>
     <main id="app">
       <section class="panel file-help" aria-labelledby="file-help-title">
@@ -243,7 +243,7 @@
   </dialog>
   <script>
     'use strict';
-    const TEST_VERSION = 'padel-level-lab-3.0';
+    const TEST_VERSION = 'padel-level-lab-3.1';
     const LETTERS = ['A', 'B', 'C', 'D', 'E'];
     const QUESTIONS = [
       {
@@ -355,7 +355,7 @@
 
     const QUESTION_COUNT = QUESTIONS.length;
     const MAX_POINTS = QUESTIONS.reduce((total, question) => total + 4 * question.weight, 0);
-    const SCORING = Object.freeze({ fundamentalsShare:0.2, exponent:1.5 });
+    const SCORING = Object.freeze({ fundamentalsShare:0.2, exponent:1.25 });
 
     const app = document.getElementById('app');
     const INITIAL_MARKUP = app.innerHTML;
@@ -417,9 +417,9 @@
           <p>Первые четыре вопроса — об опыте, розыгрыше, подаче и перемещении. Затем — игра после стекла и свеча. В трёх последних вопросах встречаются названия ударов: под каждым есть простое объяснение. Даже если вы только начинаете, для вас есть подходящий вариант ответа.</p>
           <p>В игровых вопросах ориентируйтесь на последние пять матчей, включая ошибки. Если играли меньше, отвечайте по имеющемуся опыту. Выбирайте то, что получается регулярно; если сомневаетесь между вариантами, выбирайте более низкий.</p>
           <p>Ответы A–E дают от 0 до 4 баллов. У общих вопросов 1–4 вес ×1, у игровых вопросов 5–9 — ×3. Поэтому опыт и простые навыки дают около 21% суммы с весами. Максимум — ${MAX_POINTS} баллов.</p>
-          <p>Индекс навыков: 80% от суммы с весами и 20% от самого слабого ключевого навыка — игры после стекла, свечи или удара с лёта (вопросы 5–7). Затем применяется кривая: <code>Рейтинг = округлить до десятых (1 + 4 × индекс^1.5)</code>.</p>
-          <p>Все ответы C дают 2.4. Даже если выбрать E в первых четырёх вопросах и C в остальных, получится 2.8. Высокий рейтинг требует уверенных ответов на игровые вопросы. Доступны все 41 значение от 1.0 до 5.0.</p>
-          <p>Версия 3.0 — экспериментальная самооценка по собственной шкале. Коэффициенты ещё нужно проверить по матчам и оценкам тренеров. Итог нельзя напрямую приравнять к рейтингу другой платформы.</p>
+          <p>Индекс навыков: 80% от суммы с весами и 20% от самого слабого ключевого навыка — игры после стекла, свечи или удара с лёта (вопросы 5–7). Затем применяется кривая: <code>Рейтинг = округлить до десятых (1 + 4 × индекс^${SCORING.exponent})</code>.</p>
+          <p>Все ответы C дают 2.7. Если выбрать E в первых четырёх вопросах и C в остальных, получится 3.0. Высокий рейтинг требует уверенных ответов на игровые вопросы. Доступны все 41 значение от 1.0 до 5.0.</p>
+          <p>В версии 3.1 коэффициент кривой смягчён с 1.5 до ${SCORING.exponent}: средние результаты стали выше примерно на 0.2–0.3. Это экспериментальная самооценка по собственной шкале; коэффициенты ещё нужно проверить по матчам и оценкам тренеров. Итог нельзя напрямую приравнять к рейтингу другой платформы.</p>
           <p>Ответы хранятся только в памяти этой вкладки и исчезнут после обновления страницы. Тест ничего не отправляет на сервер. Результатом можно поделиться вручную.</p>
         </details>`;
       document.getElementById('start-test').addEventListener('click', () => { renderQuestion(); focusHeading(); });
@@ -517,12 +517,12 @@
           <div class="formula">
             <p>Минимум ключевых навыков: <strong>${result.weakestFoundationPoints} из 4</strong> — ${escapeHtml(weakestFoundationNames)}.</p>
             <p>Индекс = 0.8 × (${result.weightedPoints} ÷ ${result.maxPoints}) + 0.2 × (${result.weakestFoundationPoints} ÷ 4) ≈ ${result.effectiveScore.toFixed(3)}.</p>
-            <p>Рейтинг = 1 + 4 × индекс^1.5 = <strong>${result.rating.toFixed(1)}</strong> после округления до десятых.</p>
+            <p>Рейтинг = 1 + 4 × индекс^${SCORING.exponent} = <strong>${result.rating.toFixed(1)}</strong> после округления до десятых.</p>
           </div>
           <div class="table-wrap"><table><thead><tr><th scope="col">Навык</th><th scope="col">Ответ</th><th scope="col">Балл</th><th scope="col">Вес</th><th scope="col">Итого</th></tr></thead><tbody>
             ${QUESTIONS.map((question,index) => `<tr><td>${index+1}. ${escapeHtml(question.short)}</td><td>${LETTERS[answers[index]]}</td><td>${answers[index]}</td><td>×${question.weight}</td><td>${answers[index]*question.weight} / ${4*question.weight}</td></tr>`).join('')}
           </tbody><tfoot><tr><td colspan="4">Сумма с учётом весов</td><td>${result.weightedPoints} / ${result.maxPoints}</td></tr></tfoot></table></div>
-          <p class="micro">A = 0, B = 1, C = 2, D = 3, E = 4. Общие вопросы 1–4 имеют вес ×1, игровые 5–9 — ×3. В версии 3.0 минимум по ключевым вопросам 5–7 составляет 20% индекса, сумма с весами — 80%. Показанный индекс округлён; расчёт использует полную точность. Коэффициенты требуют проверки на реальных матчах.</p>
+          <p class="micro">A = 0, B = 1, C = 2, D = 3, E = 4. Общие вопросы 1–4 имеют вес ×1, игровые 5–9 — ×3. В версии 3.1 минимум по ключевым вопросам 5–7 составляет 20% индекса, сумма с весами — 80%, коэффициент кривой — ${SCORING.exponent}. Показанный индекс округлён; расчёт использует полную точность. Коэффициенты требуют проверки на реальных матчах.</p>
         </details>
         <div class="restart-row"><button type="button" class="text-button" id="edit-answers">← Изменить ответы</button><button type="button" class="text-button" id="restart">Пройти заново</button></div>`;
 
@@ -561,7 +561,7 @@
         normalizedWeightedScore:result.normalizedWeightedScore,
         effectiveScore:result.effectiveScore,
         scoring:{...SCORING, keySkillQuestionIds:QUESTIONS.filter(question => question.foundation).map(question => question.id)},
-        formula:'round(1 + 4 * pow(0.8 * weightedPoints / maxPoints + 0.2 * weakestFoundationPoints / 4, 1.5), 1)',
+        formula:`round(1 + 4 * pow(0.8 * weightedPoints / maxPoints + 0.2 * weakestFoundationPoints / 4, ${SCORING.exponent}), 1)`,
         knownRating:feedback.knownRating === '' ? null : Number(feedback.knownRating),
         comment:feedback.comment.trim() || null,
         answers:QUESTIONS.map((question,index) => ({
@@ -587,7 +587,7 @@
         '',
         'Ответы: ' + report.answers.map(answer => `${answer.questionNumber}${answer.answerLetter}`).join(' · '),
         'Индекс = 0.8 × (баллы / максимум) + 0.2 × (минимум ключевых навыков / 4).',
-        'Рейтинг = 1 + 4 × индекс^1.5, округление до десятых.',
+        `Рейтинг = 1 + 4 × индекс^${SCORING.exponent}, округление до десятых.`,
         `Версия: ${report.testVersion}`,
         'Экспериментальная шкала. Не официальный рейтинг.'
       ].filter(line => line !== '').join('\n');
