@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#183e35">
+  <meta name="description" content="Тест для новичков и опытных игроков в падел. 9 вопросов об опыте и игре, рейтинг от 1.0 до 5.0.">
+  <title>Padel Level Lab — узнай свой уровень</title>
+  <style>
+    :root { --ink:#183e35; --muted:#65766e; --paper:#f5f5ee; --white:#fffefa; --line:#dce2d7; --lime:#d6ef87; --orange:#dc7754; --soft:#edf1e7; --radius:24px; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:16px; line-height:1.55; -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+    button,input,textarea { font:inherit; }
+    button { cursor:pointer; }
+    button:disabled { cursor:default; opacity:.42; }
+    button,a,input,textarea,summary { -webkit-tap-highlight-color:transparent; }
+    :focus-visible { outline:3px solid #ac6b35; outline-offset:4px; }
+    h1,h2,h3,p { margin:0; }
+    h1,h2 { font-weight:650; letter-spacing:-.045em; line-height:1.12; }
+    h1 { font-size:clamp(42px,6vw,70px); }
+    h2 { font-size:clamp(28px,4vw,42px); }
+    h3 { font-size:18px; letter-spacing:-.02em; }
+    a { color:inherit; }
+    .shell { max-width:1120px; margin:0 auto; padding:0 28px; padding-left:max(28px,env(safe-area-inset-left)); padding-right:max(28px,env(safe-area-inset-right)); }
+    .header { min-height:100px; display:flex; align-items:center; justify-content:space-between; gap:16px; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5; background:var(--paper); }
+    .brand { display:flex; align-items:center; gap:11px; font-size:17px; font-weight:750; letter-spacing:-.04em; }
+    .brand-mark { width:34px; height:34px; flex-shrink:0; display:grid; place-items:center; border:1.5px solid var(--ink); border-radius:50%; transform:rotate(-25deg); }
+    .brand-mark svg { width:23px; height:23px; }
+    .header-actions { display:flex; align-items:center; gap:18px; }
+    .badge,.eyebrow { font-size:11px; letter-spacing:.13em; text-transform:uppercase; font-weight:700; }
+    .badge { border:1px solid #c7d1be; padding:6px 10px; border-radius:30px; white-space:nowrap; }
+    .text-button { border:0; padding:8px 0; background:transparent; color:var(--ink); font-size:13px; font-weight:600; text-decoration:underline; text-underline-offset:4px; }
+    main { padding:44px 0 36px; min-height:calc(100svh - 174px); }
+    .hero { display:grid; grid-template-columns:1.17fr 1fr; gap:54px; align-items:center; padding:22px 0 40px; }
+    .eyebrow { color:var(--muted); margin-bottom:21px; display:block; }
+    .hero h1 span { color:#768b57; }
+    .lead { color:var(--muted); font-size:17px; line-height:1.7; max-width:480px; margin:24px 0 27px; }
+    .button { border:1px solid var(--ink); border-radius:12px; padding:15px 23px; display:inline-flex; align-items:center; justify-content:center; gap:14px; color:var(--white); background:var(--ink); font-weight:650; line-height:1.35; min-height:52px; transition:background .15s,transform .15s; }
+    .button:hover:not(:disabled) { background:#28574a; transform:translateY(-1px); }
+    .button.secondary { background:transparent; color:var(--ink); border-color:#c7d0c2; }
+    .button.secondary:hover:not(:disabled) { background:var(--soft); }
+    .button.lime { background:var(--lime); color:var(--ink); border-color:var(--lime); }
+    .button.lime:hover:not(:disabled) { background:#e2f5ad; }
+    .arrow { font-size:21px; line-height:1; }
+    .icon { width:18px; height:18px; flex-shrink:0; vertical-align:middle; }
+    .micro { font-size:12px; color:var(--muted); }
+    .hero .micro { margin-top:13px; }
+    .stats { display:flex; gap:30px; margin-top:36px; padding-top:24px; border-top:1px solid var(--line); }
+    .stat strong { display:block; font-size:25px; line-height:1.2; font-weight:600; letter-spacing:-.04em; }
+    .stat span { font-size:12px; color:var(--muted); }
+    .court-card { overflow:hidden; position:relative; background:var(--ink); color:var(--white); border-radius:var(--radius); min-height:460px; padding:27px; display:flex; flex-direction:column; justify-content:space-between; }
+    .court-card::before { content:""; position:absolute; inset:0; opacity:.11; background-image:radial-gradient(#fff 1px,transparent 1px); background-size:6px 6px; pointer-events:none; }
+    .court-top,.court-bottom { display:flex; justify-content:space-between; align-items:center; position:relative; gap:12px; }
+    .court-top { font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#c3d5c4; }
+    .live-dot { width:7px; height:7px; border-radius:50%; background:var(--lime); display:inline-block; margin-right:6px; }
+    .court { width:84%; margin:17px auto; transform:rotate(-10deg); overflow:visible; }
+    .court-bottom p { font-size:13px; color:#cfddce; max-width:160px; }
+    .rating-chip { background:var(--lime); color:var(--ink); padding:9px 15px; border-radius:13px; font-size:27px; letter-spacing:-.04em; font-weight:650; box-shadow:0 7px 20px #0b211b44; transform:rotate(5deg); display:inline-flex; align-items:center; gap:8px; }
+    .method { border:1px solid var(--line); background:#ffffff44; border-radius:16px; padding:18px 22px; }
+    summary { cursor:pointer; font-size:14px; font-weight:650; }
+    .method p { margin-top:12px; color:var(--muted); font-size:14px; max-width:850px; }
+    .method code { font-size:13px; color:var(--ink); white-space:normal; }
+    .footer { border-top:1px solid var(--line); padding:20px 0; display:flex; justify-content:space-between; gap:14px; color:var(--muted); font-size:11px; }
+    .quiz-layout { display:grid; grid-template-columns:230px minmax(0,1fr); gap:38px; align-items:start; }
+    .sidebar { padding-top:12px; }
+    .sidebar h2 { font-size:29px; margin:13px 0; }
+    .sidebar p { color:var(--muted); font-size:13px; }
+    .progress-track { height:5px; background:#dce4d4; border-radius:20px; overflow:hidden; margin:24px 0 10px; }
+    .progress-fill { height:100%; background:var(--ink); transition:width .2s; }
+    .step-list { display:grid; grid-template-columns:repeat(3,32px); gap:7px; margin:22px 0; }
+    .step { aspect-ratio:1; display:grid; place-items:center; border-radius:50%; color:var(--muted); font-size:11px; background:transparent; border:1px solid #cdd7c6; padding:0; }
+    .step.done { background:var(--lime); color:var(--ink); border-color:var(--lime); }
+    .step.current { background:var(--ink); color:var(--white); border-color:var(--ink); }
+    .sidebar-note { border-top:1px solid var(--line); padding-top:20px; }
+    .question-card { background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:34px; }
+    .question-meta { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:23px; }
+    .question-meta .eyebrow { margin:0; }
+    .weight { font-size:11px; color:var(--muted); background:var(--soft); border-radius:20px; padding:5px 10px; white-space:nowrap; }
+    .question-card h1 { font-size:clamp(25px,3.3vw,35px); line-height:1.22; margin-bottom:23px; }
+    [tabindex="-1"]:focus { outline:none; }
+    .explanation { padding:12px 15px; border-radius:12px; background:var(--soft); color:var(--muted); font-size:13px; margin:-5px 0 20px; }
+    fieldset { border:0; padding:0; margin:0; min-width:0; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    .options { display:grid; gap:10px; }
+    .option { position:relative; display:flex; align-items:center; gap:13px; min-height:65px; padding:14px 16px; border:1px solid var(--line); border-radius:13px; cursor:pointer; transition:border-color .15s,background .15s; }
+    .option:hover { background:#f5f7ef; border-color:#abbca2; }
+    .option:has(input:checked) { background:#edf4dd; border-color:var(--ink); }
+    .option:has(input:focus-visible) { outline:3px solid #ac6b35; outline-offset:2px; }
+    .option input { position:absolute; width:1px; height:1px; opacity:0; }
+    .letter { flex:0 0 29px; width:29px; height:29px; display:grid; place-items:center; border-radius:8px; border:1px solid #d4dbcc; font-size:12px; font-weight:650; color:var(--muted); background:var(--white); }
+    .option:has(input:checked) .letter { background:var(--ink); color:var(--white); border-color:var(--ink); }
+    .option-text { font-size:14px; line-height:1.5; }
+    .question-nav { display:flex; justify-content:space-between; gap:15px; margin-top:26px; padding-top:23px; border-top:1px solid var(--line); }
+    .question-nav .button { min-width:116px; font-size:14px; padding:13px 18px; }
+    .question-help { text-align:center; margin-top:15px; font-size:11px; color:var(--muted); }
+    .result-heading { margin:0 0 25px; display:flex; justify-content:space-between; gap:15px; align-items:end; }
+    .result-heading .eyebrow { margin-bottom:9px; }
+    .result-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:stretch; }
+    .score-card { background:var(--ink); color:var(--white); border-radius:var(--radius); padding:29px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+    .score-caption { color:#d0ddce; font-size:13px; }
+    .score-ring { --progress:0%; width:210px; height:210px; border-radius:50%; background:conic-gradient(from -30deg,var(--lime) var(--progress),#ffffff20 0); padding:8px; margin:23px auto; }
+    .score-inside { width:100%; height:100%; border-radius:50%; background:var(--ink); display:flex; flex-direction:column; justify-content:center; align-items:center; }
+    .score-value { font-size:79px; line-height:1; font-weight:600; letter-spacing:-.07em; padding-right:5px; color:var(--lime); }
+    .score-inside span:last-child { color:#c8d8c9; font-size:12px; margin-top:8px; }
+    .score-card p:last-child { color:#d0ddce; font-size:13px; max-width:300px; }
+    .panel { background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:28px; }
+    .panel > p { color:var(--muted); font-size:13px; margin:10px 0 21px; }
+    .file-help h1 { font-size:clamp(28px,4vw,42px); }
+    .fields { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+    .field { display:flex; flex-direction:column; gap:7px; font-size:12px; color:var(--muted); }
+    .field.full { grid-column:1 / -1; }
+    input[type="text"],input[type="number"],textarea { width:100%; border:1px solid #cdd6c6; border-radius:10px; padding:11px 12px; color:var(--ink); background:var(--white); font-size:14px; }
+    textarea { resize:vertical; min-height:78px; }
+    .feedback-hint { font-size:12px; color:var(--muted); margin-top:13px; }
+    .result-actions { display:flex; flex-wrap:wrap; gap:11px; margin:23px 0 13px; }
+    .result-actions .button { font-size:14px; padding:13px 18px; }
+    .status { font-size:13px; color:var(--ink); min-height:23px; }
+    .details { margin-top:24px; }
+    .details summary { padding:1px 0; }
+    .formula { background:var(--soft); padding:15px 18px; border-radius:12px; margin:20px 0; font-size:14px; }
+    .table-wrap { overflow-x:auto; }
+    table { border-collapse:collapse; width:100%; font-size:13px; text-align:left; }
+    th { font-size:11px; font-weight:650; color:var(--muted); }
+    th,td { border-bottom:1px solid var(--line); padding:12px 9px; vertical-align:top; }
+    th:first-child,td:first-child { padding-left:0; }
+    td:not(:first-child),th:not(:first-child) { text-align:right; white-space:nowrap; }
+    tfoot td { font-weight:700; border-bottom:0; }
+    .details .micro { margin-top:16px; }
+    .restart-row { display:flex; gap:22px; margin-top:22px; flex-wrap:wrap; }
+    dialog { border:1px solid var(--line); border-radius:18px; max-width:600px; width:calc(100% - 32px); padding:25px; color:var(--ink); background:var(--white); }
+    dialog::backdrop { background:#142b25aa; }
+    dialog h2 { font-size:25px; margin-bottom:15px; }
+    dialog textarea { min-height:230px; margin-bottom:15px; }
+    .share-instructions { color:var(--muted); font-size:13px; margin:16px 0; padding-left:21px; }
+    .share-instructions li { margin:7px 0; }
+    .share-actions { display:flex; flex-wrap:wrap; gap:10px; margin:18px 0; }
+    .share-actions .button { font-size:13px; padding:12px 16px; }
+    #share-source { font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; min-height:150px; }
+    #share-status { margin-bottom:12px; }
+    @media (max-width:800px) {
+      .hero { gap:27px; grid-template-columns:1.1fr 1fr; }
+      .court-card { min-height:405px; padding:22px; }
+      .quiz-layout { grid-template-columns:180px minmax(0,1fr); gap:22px; }
+      .question-card { padding:25px; }
+      .stats { gap:21px; }
+    }
+    @media (max-width:640px) {
+      .shell { padding:0 19px; padding-left:max(19px,env(safe-area-inset-left)); padding-right:max(19px,env(safe-area-inset-right)); }
+      .header { min-height:77px; }
+      .brand { font-size:15px; gap:8px; }
+      .brand-mark { width:28px; height:28px; }
+      .header-actions { gap:10px; }
+      .header .badge { display:none; }
+      .header .text-button { font-size:11px; white-space:nowrap; min-height:44px; }
+      main { padding-top:26px; }
+      .hero { grid-template-columns:1fr; padding:7px 0 25px; gap:30px; }
+      .hero h1 { font-size:49px; }
+      .lead { font-size:15px; margin:19px 0 22px; }
+      .hero .button { width:100%; }
+      .stats { margin-top:25px; justify-content:space-between; gap:10px; }
+      .stat strong { font-size:23px; }
+      .court-card { min-height:0; height:300px; padding:20px; }
+      .court { width:205px; max-height:195px; margin:0 auto; }
+      .court-bottom p { max-width:200px; font-size:11px; }
+      .rating-chip { font-size:22px; padding:5px 12px; }
+      .method { padding:16px; }
+      .quiz-layout { grid-template-columns:1fr; gap:18px; }
+      .sidebar { padding-top:0; }
+      .sidebar .eyebrow { margin-bottom:6px; }
+      .sidebar h2,.sidebar > p,.sidebar-note,.step-list { display:none; }
+      .progress-track { margin:14px 0 7px; }
+      .question-card { padding:22px 17px; border-radius:19px; }
+      .question-card h1 { font-size:26px; }
+      .question-meta { margin-bottom:18px; }
+      .option { padding:12px; gap:11px; }
+      .option-text { font-size:13px; }
+      .letter { flex-basis:27px; width:27px; height:27px; }
+      .question-nav { margin-top:20px; }
+      .question-nav .button { min-width:0; padding:13px 16px; }
+      .result-grid { grid-template-columns:1fr; gap:17px; }
+      .result-heading h1 { font-size:35px; }
+      .score-card,.panel { padding:23px 20px; }
+      .score-ring { width:188px; height:188px; margin:18px auto; }
+      .score-value { font-size:71px; }
+      .result-actions { display:grid; grid-template-columns:1fr; }
+      .fields { gap:11px; }
+      .footer { flex-direction:column; gap:4px; padding:17px 0; padding-bottom:calc(17px + env(safe-area-inset-bottom)); }
+    }
+    @media (pointer:coarse) { input[type="text"],input[type="number"],textarea { font-size:16px; } }
+    @media (max-width:360px) { .fields { grid-template-columns:1fr; } }
+    @media (prefers-reduced-motion:reduce) { * { transition:none !important; scroll-behavior:auto !important; } }
+    @media print {
+      .header-actions,.footer,.result-actions,.restart-row,.status,dialog { display:none !important; }
+      body { background:white; }
+      main { padding-top:20px; }
+      .score-card { background:white; color:var(--ink); border:1px solid var(--line); }
+      .score-inside { background:white; }
+      .score-value,.score-caption,.score-card p:last-child,.score-inside span:last-child { color:var(--ink); }
+      .panel,.score-card { break-inside:avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="header">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 0 0 0 20M12 2a10 10 0 0 1 0 20M3 8c5 1 6 7 3 12M21 4c-6 2-7 9-2 15"/></svg></span> PADEL LEVEL LAB</div>
+      <div class="header-actions"><span class="badge">Песочница · v3.0</span><button class="text-button" type="button" id="download-test">Получить HTML ↓</button></div>
+    </header>
+    <main id="app">
+      <section class="panel file-help" aria-labelledby="file-help-title">
+        <span class="eyebrow">Тест уровня игры в падел</span>
+        <h1 id="file-help-title">Для прохождения откройте страницу в браузере</h1>
+        <p>Если тест не появился, просмотрщик файла мог заблокировать его запуск. На iPhone такое бывает при открытии HTML из «Файлов» или мессенджера.</p>
+        <p>Попросите у отправителя веб-ссылку на тест и откройте её в Safari или Chrome. Отправителю нужно разместить страницу на сайте: повторное скачивание HTML не снимает ограничение просмотрщика.</p>
+      </section>
+    </main>
+    <noscript><p>Тесту нужен JavaScript. Откройте веб-страницу теста в Safari или Chrome с включённым JavaScript.</p></noscript>
+    <footer class="footer"><span>9 вопросов. Для новичков и опытных игроков.</span><span>Самооценка · Собственная шкала 1.0–5.0 · Не официальный рейтинг</span></footer>
+  </div>
+  <dialog id="copy-dialog" aria-labelledby="copy-dialog-title">
+    <h2 id="copy-dialog-title">Ваш результат</h2>
+    <p class="micro">Автокопирование недоступно в этом браузере. Выделите и скопируйте текст ниже.</p>
+    <textarea id="copy-text" aria-label="Результат для копирования" readonly></textarea>
+    <button type="button" class="button" id="close-dialog">Готово</button>
+  </dialog>
+  <dialog id="share-dialog" aria-labelledby="share-title">
+    <h2 id="share-title">Забрать тест себе</h2>
+    <p class="micro">Один HTML-файл для вас и ваших друзей. Он работает без интернета. Ваши ответы и комментарии в него не попадут.</p>
+    <p class="micro">На iPhone отправляйте ссылку на опубликованную страницу: просмотрщик скачанного HTML в «Файлах» или мессенджере может не запускать тест. Если страница уже открыта по веб-ссылке, поделитесь адресом через меню браузера.</p>
+    <div class="share-actions">
+      <button class="button" type="button" id="save-html">Скачать .html ↓</button>
+      <button class="button secondary" type="button" id="copy-html">Скопировать код</button>
+    </div>
+    <p class="micro">Если скачивание в предпросмотре недоступно, сохраните код вручную:</p>
+    <ol class="share-instructions">
+      <li>Нажмите «Скопировать код». Если браузер не разрешает копирование, выделите код ниже и нажмите Ctrl+C (на Mac — ⌘C).</li>
+      <li>Вставьте код в Блокнот или другой редактор обычного текста. Сохраните как <strong>padel-test.html</strong>, тип файла — «Все файлы», кодировка — UTF-8. Расширения .txt в конце быть не должно.</li>
+      <li>Откройте сохранённый файл в браузере на компьютере. Для друзей с iPhone разместите файл как веб-страницу и отправьте её ссылку.</li>
+    </ol>
+    <textarea id="share-source" aria-label="Полный HTML-код теста" readonly spellcheck="false" wrap="off"></textarea>
+    <div id="share-status" class="status" role="status" aria-live="polite"></div>
+    <button class="button secondary" type="button" id="close-share">Закрыть</button>
+  </dialog>
+  <script>
+    'use strict';
+    const TEST_VERSION = 'padel-level-lab-3.0';
+    const LETTERS = ['A', 'B', 'C', 'D', 'E'];
+    const QUESTIONS = [
+      {
+        id:'experience', short:'Опыт игры', weight:1, group:'easy',
+        title:'Сколько у вас опыта игры в падел?',
+        options:[
+          'Ещё не играл или попробовал всего 1–2 раза.',
+          'Начал недавно: играю меньше трёх месяцев.',
+          'Играю от трёх месяцев до года.',
+          'Играю от года до двух лет.',
+          'Играю больше двух лет.'
+        ]
+      },
+      {
+        id:'rally', short:'Поддержание розыгрыша', weight:1, group:'easy',
+        title:'Получается ли у вас несколько раз подряд вернуть мяч без ошибки?',
+        options:[
+          'Часто ошибаюсь уже на первом или втором мяче.',
+          'Обычно возвращаю 3–5 удобных мячей подряд.',
+          'На спокойной скорости поддерживаю розыгрыш из 6–10 ударов.',
+          'Могу долго держать мяч в игре справа и слева, но при ускорениях ещё ошибаюсь.',
+          'Уверенно поддерживаю быстрый розыгрыш и могу менять направление и высоту мяча.'
+        ]
+      },
+      {
+        id:'serve-return', short:'Подача и приём', weight:1, group:'easy',
+        title:'Насколько уверенно вы подаёте и принимаете подачу?',
+        explanation:'Если подача и приём получаются по-разному, ориентируйтесь на то, что даётся сложнее.',
+        options:[
+          'Пока осваиваю правила и часто не могу ввести мяч в игру.',
+          'Иногда подаю и принимаю удачно, но ошибок ещё много.',
+          'Обычно начинаю розыгрыш без ошибки, если мяч не слишком сложный.',
+          'Стабильно подаю и принимаю, стараюсь направить мяч в выбранную часть корта.',
+          'Уверенно выбираю направление и глубину, чтобы получить удобный следующий удар.'
+        ]
+      },
+      {
+        id:'positioning', short:'Позиция и движение', weight:1, group:'easy',
+        title:'Понимаете ли вы, где стоять и куда двигаться во время игры?',
+        options:[
+          'Часто не понимаю, где моя позиция и чей это мяч.',
+          'Знаю основные места на корте, но часто оказываюсь далеко от мяча.',
+          'Обычно занимаю удобную позицию, но в быстрых розыгрышах теряюсь.',
+          'Двигаюсь вместе с партнёром, прикрываю свободное место и вовремя возвращаюсь назад.',
+          'Заранее читаю действия соперников и постоянно подстраиваю позицию вместе с партнёром.'
+        ]
+      },
+      {
+        id:'glass-defense', short:'Игра после стекла', weight:3, group:'game', foundation:true,
+        title:'Как вы возвращаете мяч после отскока от стекла?',
+        explanation:'Вспомните мячи у задней стенки и в углу: успеваете ли вы подойти к отскоку и направить ответ?',
+        options:[
+          'Обычно теряю такой мяч или стараюсь не допустить отскока от стекла.',
+          'Возвращаю простой медленный мяч от заднего стекла, но в углу часто ошибаюсь.',
+          'Часто возвращаю обычный мяч от заднего стекла; сложные отскоки в углу пока даются тяжело.',
+          'В матчах уверенно играю от заднего стекла и после двух стенок, могу выбрать направление ответа.',
+          'Даже при быстрых и низких отскоках сохраняю контроль, направляю ответ и успеваю восстановить позицию.'
+        ]
+      },
+      {
+        id:'lob', short:'Свеча', weight:3, group:'game', foundation:true,
+        title:'Получается ли у вас перебросить соперников у сетки — сыграть свечу?',
+        explanation:'Свеча — высокий мяч над соперниками. Хорошая свеча заставляет их отойти назад и даёт вам время занять удобную позицию.',
+        options:[
+          'Часто попадаю в сетку, бью за корт или оставляю соперникам удобный мяч для атаки.',
+          'Иногда перебрасываю соперников с удобного мяча, но длину пока контролирую плохо.',
+          'С удобного мяча часто выполняю глубокую свечу, но в движении или из защиты ошибаюсь.',
+          'В матчах выполняю глубокую свечу и из защиты, чтобы восстановить позицию или выйти вперёд.',
+          'При быстрой игре уверенно выбираю высоту, глубину и направление свечи и использую её в подходящий момент.'
+        ]
+      },
+      {
+        id:'volley', short:'Воллей — удар с лёта', weight:3, group:'technical', foundation:true,
+        title:'Воллей: как вы играете с лёта у сетки?',
+        explanation:'Воллей — удар до отскока мяча от пола. Оценивайте и правую, и левую сторону по той, которая получается менее уверенно.',
+        options:[
+          'Пока редко играю с лёта или часто ошибаюсь даже на удобном мяче.',
+          'Возвращаю простые мячи, но быстрые и низкие часто не успеваю обработать.',
+          'Стабильно играю с лёта на средней скорости, но сложные мячи часто поднимаю под атаку.',
+          'В матчах делаю короткое движение ракеткой, справляюсь с быстрыми и низкими мячами и направляю ответ.',
+          'На высоком темпе управляю глубиной и направлением, смягчаю быстрые мячи и сохраняю давление несколькими ударами подряд.'
+        ]
+      },
+      {
+        id:'bandeja', short:'Бандеха', weight:3, group:'technical',
+        title:'Бандеха: как вы возвращаете высокие мячи, сохраняя сетку?',
+        explanation:'Бандеха (bandeja) — контролируемый удар над головой в ответ на свечу. Его цель — вернуть мяч с контролем и остаться в выгодной позиции у сетки.',
+        options:[
+          'Пока не выполняю такой удар или обычно пропускаю высокий мяч к стеклу.',
+          'Пробую на удобных мячах, но в матче часто теряю равновесие или направление.',
+          'С удобной позиции контролирую удар, но при отходе назад часто оставляю короткий высокий мяч.',
+          'В матчах успеваю отойти под мяч, направляю удар в нужную зону и возвращаюсь к сетке.',
+          'Даже после глубоких свечей и под давлением сохраняю качество, меняю направление и удерживаю позицию у сетки.'
+        ]
+      },
+      {
+        id:'bajada', short:'Бахада', weight:3, group:'technical',
+        title:'Бахада: как вы атакуете после высокого отскока от стекла?',
+        explanation:'Бахада (bajada) — атакующий удар после высокого отскока от заднего стекла. Нужно вовремя подойти к мячу и направить его в неудобное для соперников место.',
+        options:[
+          'Пока не выполняю такой удар: стараюсь просто вернуть мяч в игру.',
+          'Пробую атаковать, но часто опаздываю или ошибаюсь из-за слишком сильного удара.',
+          'Атакую удобный высокий отскок, но в матче точность и качество пока нестабильны.',
+          'В матчах вовремя подхожу к отскоку, атакую в выбранную зону и готовлю следующий удар.',
+          'При быстрой игре читаю отскок и позицию соперников, точно направляю мяч в ноги или свободное место и продолжаю атаку.'
+        ]
+      }
+    ];
+
+    const QUESTION_COUNT = QUESTIONS.length;
+    const MAX_POINTS = QUESTIONS.reduce((total, question) => total + 4 * question.weight, 0);
+    const SCORING = Object.freeze({ fundamentalsShare:0.2, exponent:1.5 });
+
+    const app = document.getElementById('app');
+    const INITIAL_MARKUP = app.innerHTML;
+    let answers = Array(QUESTIONS.length).fill(null);
+    let currentQuestion = 0;
+    let completedAt = null;
+    let feedback = { name:'', knownRating:'', comment:'' };
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
+    }
+
+    function calculateResult(selectedAnswers) {
+      if (!Array.isArray(selectedAnswers) || selectedAnswers.length !== QUESTION_COUNT || !Array.from(selectedAnswers).every(value => Number.isInteger(value) && value >= 0 && value <= 4)) {
+        throw new Error(`Для расчёта нужно ответить на все ${QUESTION_COUNT} вопросов.`);
+      }
+      const weightedPoints = selectedAnswers.reduce((total, value, index) => total + value * QUESTIONS[index].weight, 0);
+      const weakestFoundationPoints = Math.min(...selectedAnswers.filter((value,index) => QUESTIONS[index].foundation));
+      const normalizedWeightedScore = weightedPoints / MAX_POINTS;
+      const effectiveScore = (1 - SCORING.fundamentalsShare) * normalizedWeightedScore + SCORING.fundamentalsShare * weakestFoundationPoints / 4;
+      const rating = Math.round((1 + 4 * Math.pow(effectiveScore, SCORING.exponent)) * 10) / 10;
+      return { weightedPoints, maxPoints:MAX_POINTS, normalizedWeightedScore, weakestFoundationPoints, effectiveScore, rating };
+    }
+
+    function focusHeading() {
+      app.querySelector('h1')?.focus({preventScroll:true});
+      window.scrollTo({top:0, behavior:'instant'});
+    }
+
+    function renderIntro() {
+      app.innerHTML = `
+        <section class="hero" aria-labelledby="intro-title">
+          <div>
+            <span class="eyebrow">Найдите свой уровень игры</span>
+            <h1 id="intro-title" tabindex="-1">Ваш падел.<br>Ваша <span>точка<br>отсчёта.</span></h1>
+            <p class="lead">Только знакомитесь с паделом или уже уверенно играете? Ответьте на ${QUESTION_COUNT} вопросов об опыте и игре и получите предварительный рейтинг.</p>
+            <button type="button" class="button" id="start-test">Узнать свой уровень <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></button>
+            <p class="micro">Без регистрации · Для новичков и опытных игроков</p>
+            <div class="stats"><div class="stat"><strong>${QUESTION_COUNT}</strong><span>вопросов об игре</span></div><div class="stat"><strong>≈ 3 мин</strong><span>на прохождение</span></div><div class="stat"><strong>1.0–5.0</strong><span>рейтинг с шагом 0.1</span></div></div>
+          </div>
+          <div class="court-card" aria-hidden="true">
+            <div class="court-top"><span><i class="live-dot"></i> Найдите свою игру</span><span>01 / 05</span></div>
+            <svg class="court" viewBox="0 0 300 290" fill="none">
+              <path d="M63 17h174v256H63z" fill="#254b40" stroke="#d5e2c5" stroke-width="2"/>
+              <path d="M63 78h174M63 212h174M150 78v134" stroke="#d5e2c5" stroke-width="2"/>
+              <path d="M52 145h196" stroke="#d6ef87" stroke-width="3"/>
+              <path d="M52 140v10M248 140v10" stroke="#d6ef87" stroke-width="3"/>
+              <path d="M100 246c-20-53-7-70 50-110s58-59 44-94" stroke="#d6ef87" stroke-width="1.8" stroke-dasharray="5 6"/>
+              <circle cx="101" cy="246" r="10" fill="#dc7754"/>
+              <circle cx="194" cy="42" r="11" fill="#d6ef87"/>
+              <path d="M185 39c6 0 11 4 13 11M193 31c-1 6 3 11 11 12" stroke="#183e35" stroke-width="1.3"/>
+              <circle cx="150" cy="136" r="24" stroke="#d6ef87" stroke-opacity=".3"/>
+              <circle cx="150" cy="136" r="4" fill="#d6ef87"/>
+            </svg>
+            <div class="court-bottom"><p>У каждого игрока<br>своя точка старта.</p><span class="rating-chip">2.7 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 19 19 5M5 5h14v14"/></svg></span></div>
+          </div>
+        </section>
+        <details class="method"><summary>Как работает этот тест?</summary>
+          <p>Первые четыре вопроса — об опыте, розыгрыше, подаче и перемещении. Затем — игра после стекла и свеча. В трёх последних вопросах встречаются названия ударов: под каждым есть простое объяснение. Даже если вы только начинаете, для вас есть подходящий вариант ответа.</p>
+          <p>В игровых вопросах ориентируйтесь на последние пять матчей, включая ошибки. Если играли меньше, отвечайте по имеющемуся опыту. Выбирайте то, что получается регулярно; если сомневаетесь между вариантами, выбирайте более низкий.</p>
+          <p>Ответы A–E дают от 0 до 4 баллов. У общих вопросов 1–4 вес ×1, у игровых вопросов 5–9 — ×3. Поэтому опыт и простые навыки дают около 21% суммы с весами. Максимум — ${MAX_POINTS} баллов.</p>
+          <p>Индекс навыков: 80% от суммы с весами и 20% от самого слабого ключевого навыка — игры после стекла, свечи или удара с лёта (вопросы 5–7). Затем применяется кривая: <code>Рейтинг = округлить до десятых (1 + 4 × индекс^1.5)</code>.</p>
+          <p>Все ответы C дают 2.4. Даже если выбрать E в первых четырёх вопросах и C в остальных, получится 2.8. Высокий рейтинг требует уверенных ответов на игровые вопросы. Доступны все 41 значение от 1.0 до 5.0.</p>
+          <p>Версия 3.0 — экспериментальная самооценка по собственной шкале. Коэффициенты ещё нужно проверить по матчам и оценкам тренеров. Итог нельзя напрямую приравнять к рейтингу другой платформы.</p>
+          <p>Ответы хранятся только в памяти этой вкладки и исчезнут после обновления страницы. Тест ничего не отправляет на сервер. Результатом можно поделиться вручную.</p>
+        </details>`;
+      document.getElementById('start-test').addEventListener('click', () => { renderQuestion(); focusHeading(); });
+    }
+
+    function renderQuestion() {
+      const question = QUESTIONS[currentQuestion];
+      const answeredCount = answers.filter(answer => answer !== null).length;
+      app.innerHTML = `
+        <div class="quiz-layout">
+          <aside class="sidebar" aria-label="Прогресс теста">
+            <span class="eyebrow">Ваш игровой профиль</span>
+            <h2>Каждый удар<br>имеет значение.</h2>
+            <p>Отвечайте по обычной игре. Если только начинаете, выбирайте вариант, который ближе к вашему опыту.</p>
+            <div class="progress-track" role="progressbar" aria-label="Вопросов отвечено" aria-valuemin="0" aria-valuemax="${QUESTION_COUNT}" aria-valuenow="${answeredCount}"><div class="progress-fill" style="width:${answeredCount / QUESTION_COUNT * 100}%"></div></div>
+            <div class="micro" id="progress-caption">Отвечено ${answeredCount} из ${QUESTION_COUNT}</div>
+            <nav class="step-list" aria-label="Перейти к вопросу">${QUESTIONS.map((item,index) => `<button type="button" class="step ${answers[index] !== null ? 'done' : ''} ${index === currentQuestion ? 'current' : ''}" data-step="${index}" aria-label="Вопрос ${index+1}: ${escapeHtml(item.short)}${answers[index] !== null ? ', ответ выбран' : ''}" ${index === currentQuestion ? 'aria-current="step"' : ''}>${index+1}</button>`).join('')}</nav>
+            <p class="sidebar-note">Рейтинг будет доступен после всех ${QUESTION_COUNT} ответов. Любой ответ можно изменить.</p>
+          </aside>
+          <section class="question-card" aria-labelledby="question-title">
+            <div class="question-meta"><span class="eyebrow">Вопрос ${String(currentQuestion+1).padStart(2,'0')} / ${QUESTION_COUNT}</span><span class="weight">${question.group === 'easy' ? 'Общее' : question.group === 'technical' ? 'Техника' : 'Игра'} · Вес ×${question.weight}</span></div>
+            <h1 id="question-title" tabindex="-1">${escapeHtml(question.title)}</h1>
+            ${question.explanation ? `<p class="explanation" id="question-explanation">${escapeHtml(question.explanation)}</p>` : ''}
+            <fieldset ${question.explanation ? 'aria-describedby="question-explanation"' : ''}>
+              <legend class="sr-only">${escapeHtml(question.title)} Выберите один ответ.</legend>
+              <div class="options">${question.options.map((option,index) => `
+                <label class="option"><input type="radio" name="answer" value="${index}" ${answers[currentQuestion] === index ? 'checked' : ''}><span class="letter" aria-hidden="true">${LETTERS[index]}</span><span class="option-text">${escapeHtml(option)}</span></label>`).join('')}
+              </div>
+            </fieldset>
+            <div class="question-nav">
+              <button type="button" class="button secondary" id="previous">${currentQuestion === 0 ? 'К началу' : '← Назад'}</button>
+              <button type="button" class="button" id="next" ${answers[currentQuestion] === null ? 'disabled' : ''}>${currentQuestion === QUESTION_COUNT - 1 ? 'Мой результат' : 'Далее'} <span class="arrow" aria-hidden="true">→</span></button>
+            </div>
+            <p class="question-help">${question.id === 'experience' ? 'Выберите подходящий вариант опыта. Игровые навыки будут дальше.' : 'Оценивайте обычную игру. Если сомневаетесь между вариантами, выбирайте более низкий.'}</p>
+          </section>
+        </div>`;
+
+      app.querySelectorAll('input[name="answer"]').forEach(input => input.addEventListener('change', event => {
+        answers[currentQuestion] = Number(event.target.value);
+        document.getElementById('next').disabled = false;
+        const count = answers.filter(answer => answer !== null).length;
+        const progress = app.querySelector('[role="progressbar"]');
+        progress.setAttribute('aria-valuenow', count);
+        app.querySelector('.progress-fill').style.width = `${count / QUESTION_COUNT * 100}%`;
+        document.getElementById('progress-caption').textContent = `Отвечено ${count} из ${QUESTION_COUNT}`;
+        const step = app.querySelector(`[data-step="${currentQuestion}"]`);
+        step.classList.add('done');
+        step.setAttribute('aria-label', `Вопрос ${currentQuestion+1}: ${question.short}, ответ выбран`);
+      }));
+      app.querySelectorAll('[data-step]').forEach(button => button.addEventListener('click', () => {
+        currentQuestion = Number(button.dataset.step); renderQuestion(); focusHeading();
+      }));
+      document.getElementById('previous').addEventListener('click', () => {
+        if (currentQuestion === 0) renderIntro();
+        else { currentQuestion--; renderQuestion(); }
+        focusHeading();
+      });
+      document.getElementById('next').addEventListener('click', () => {
+        if (answers[currentQuestion] === null) return;
+        if (currentQuestion < QUESTION_COUNT - 1) { currentQuestion++; renderQuestion(); }
+        else {
+          const missing = answers.findIndex(answer => answer === null);
+          if (missing !== -1) { currentQuestion = missing; renderQuestion(); }
+          else { completedAt = new Date().toISOString(); renderResult(); }
+        }
+        focusHeading();
+      });
+    }
+
+    function renderResult() {
+      const result = calculateResult(answers);
+      const weakestFoundationNames = QUESTIONS.filter((question,index) => question.foundation && answers[index] === result.weakestFoundationPoints).map(question => question.short).join(', ');
+      app.innerHTML = `
+        <div class="result-heading"><div><span class="eyebrow">${QUESTION_COUNT} из ${QUESTION_COUNT} · Тест пройден</span><h1 tabindex="-1">Ваша точка отсчёта.</h1></div></div>
+        <div class="result-grid">
+          <section class="score-card" aria-label="Результат теста">
+            <span class="score-caption">Ваш предварительный рейтинг</span>
+            <div class="score-ring" style="--progress:${(result.rating-1)/4*100}%"><div class="score-inside"><strong class="score-value" id="rating">${result.rating.toFixed(1)}</strong><span>по шкале от 1.0 до 5.0</span></div></div>
+            <p>Результат основан на ваших ответах. Его стоит уточнить по матчам с игроками известного уровня.</p>
+          </section>
+          <section class="panel" aria-labelledby="feedback-title">
+            <h3 id="feedback-title">Помогите проверить точность</h3>
+            <p>Необязательно: добавьте известный уровень и пару слов о результате. Они попадут в отчёт, которым вы поделитесь.</p>
+            <div class="fields">
+              <label class="field">Имя или ник<input type="text" id="player-name" maxlength="80" autocomplete="off" placeholder="Как вас зовут?" value="${escapeHtml(feedback.name)}"></label>
+              <label class="field">Известный уровень<input type="number" id="known-rating" min="1" max="5" step="0.1" inputmode="decimal" placeholder="Например, 2.5" value="${escapeHtml(feedback.knownRating)}"></label>
+              <label class="field full">Ваш комментарий<textarea id="player-comment" maxlength="1500" placeholder="Похоже на ваш уровень? Если сравниваете с другой шкалой, укажите платформу.">${escapeHtml(feedback.comment)}</textarea></label>
+            </div>
+            <p class="feedback-hint">Поля не меняют расчёт рейтинга. Сравнение с другой шкалой — только для обратной связи.</p>
+          </section>
+        </div>
+        <div class="result-actions"><button type="button" class="button" id="copy-result">Скопировать результат <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></button><button type="button" class="button secondary" id="download-result">Скачать отчёт .json ↓</button></div>
+        <div class="status" id="result-status" role="status" aria-live="polite"></div>
+        <details class="panel details"><summary>Разобрать результат · ${result.weightedPoints} из ${result.maxPoints} баллов</summary>
+          <div class="formula">
+            <p>Минимум ключевых навыков: <strong>${result.weakestFoundationPoints} из 4</strong> — ${escapeHtml(weakestFoundationNames)}.</p>
+            <p>Индекс = 0.8 × (${result.weightedPoints} ÷ ${result.maxPoints}) + 0.2 × (${result.weakestFoundationPoints} ÷ 4) ≈ ${result.effectiveScore.toFixed(3)}.</p>
+            <p>Рейтинг = 1 + 4 × индекс^1.5 = <strong>${result.rating.toFixed(1)}</strong> после округления до десятых.</p>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th scope="col">Навык</th><th scope="col">Ответ</th><th scope="col">Балл</th><th scope="col">Вес</th><th scope="col">Итого</th></tr></thead><tbody>
+            ${QUESTIONS.map((question,index) => `<tr><td>${index+1}. ${escapeHtml(question.short)}</td><td>${LETTERS[answers[index]]}</td><td>${answers[index]}</td><td>×${question.weight}</td><td>${answers[index]*question.weight} / ${4*question.weight}</td></tr>`).join('')}
+          </tbody><tfoot><tr><td colspan="4">Сумма с учётом весов</td><td>${result.weightedPoints} / ${result.maxPoints}</td></tr></tfoot></table></div>
+          <p class="micro">A = 0, B = 1, C = 2, D = 3, E = 4. Общие вопросы 1–4 имеют вес ×1, игровые 5–9 — ×3. В версии 3.0 минимум по ключевым вопросам 5–7 составляет 20% индекса, сумма с весами — 80%. Показанный индекс округлён; расчёт использует полную точность. Коэффициенты требуют проверки на реальных матчах.</p>
+        </details>
+        <div class="restart-row"><button type="button" class="text-button" id="edit-answers">← Изменить ответы</button><button type="button" class="text-button" id="restart">Пройти заново</button></div>`;
+
+      document.getElementById('player-name').addEventListener('input', event => { feedback.name = event.target.value; });
+      document.getElementById('known-rating').addEventListener('input', event => { feedback.knownRating = event.target.value; });
+      document.getElementById('player-comment').addEventListener('input', event => { feedback.comment = event.target.value; });
+      document.getElementById('copy-result').addEventListener('click', copyResult);
+      document.getElementById('download-result').addEventListener('click', () => {
+        if (!validateFeedback()) return;
+        const report = buildReport();
+        downloadFile(`padel-result-${report.completedAt.slice(0,10)}.json`, JSON.stringify(report,null,2), 'application/json;charset=utf-8');
+        document.getElementById('result-status').textContent = 'Отчёт подготовлен к скачиванию. Его можно отправить вместе с обратной связью.';
+      });
+      document.getElementById('edit-answers').addEventListener('click', () => { currentQuestion = 0; renderQuestion(); focusHeading(); });
+      document.getElementById('restart').addEventListener('click', () => {
+        answers = Array(QUESTIONS.length).fill(null); currentQuestion = 0; completedAt = null;
+        feedback = {name:'',knownRating:'',comment:''}; renderQuestion(); focusHeading();
+      });
+    }
+
+    function validateFeedback() {
+      return document.getElementById('known-rating').reportValidity();
+    }
+
+    function buildReport() {
+      const result = calculateResult(answers);
+      return {
+        testVersion:TEST_VERSION,
+        questionCount:QUESTION_COUNT,
+        completedAt,
+        playerName:feedback.name.trim() || null,
+        rating:result.rating,
+        weightedPoints:result.weightedPoints,
+        maxPoints:result.maxPoints,
+        weakestFoundationPoints:result.weakestFoundationPoints,
+        normalizedWeightedScore:result.normalizedWeightedScore,
+        effectiveScore:result.effectiveScore,
+        scoring:{...SCORING, keySkillQuestionIds:QUESTIONS.filter(question => question.foundation).map(question => question.id)},
+        formula:'round(1 + 4 * pow(0.8 * weightedPoints / maxPoints + 0.2 * weakestFoundationPoints / 4, 1.5), 1)',
+        knownRating:feedback.knownRating === '' ? null : Number(feedback.knownRating),
+        comment:feedback.comment.trim() || null,
+        answers:QUESTIONS.map((question,index) => ({
+          questionNumber:index+1, questionId:question.id, question:question.title,
+          group:question.group, isKeySkill:Boolean(question.foundation),
+          answerLetter:LETTERS[answers[index]], answer:question.options[answers[index]],
+          points:answers[index], weight:question.weight, weightedPoints:answers[index]*question.weight
+        }))
+      };
+    }
+
+    async function copyResult() {
+      if (!validateFeedback()) return;
+      const report = buildReport();
+      const text = [
+        'PADEL LEVEL LAB · предварительный рейтинг',
+        report.playerName ? `Игрок: ${report.playerName}` : '',
+        `Рейтинг: ${report.rating.toFixed(1)} / 5.0`,
+        `Баллы: ${report.weightedPoints} / ${report.maxPoints}`,
+        `Минимум ключевых навыков: ${report.weakestFoundationPoints} / 4`,
+        report.knownRating !== null ? `Известный уровень (самооценка игрока): ${report.knownRating.toFixed(1)}` : '',
+        report.comment ? `Комментарий: ${report.comment}` : '',
+        '',
+        'Ответы: ' + report.answers.map(answer => `${answer.questionNumber}${answer.answerLetter}`).join(' · '),
+        'Индекс = 0.8 × (баллы / максимум) + 0.2 × (минимум ключевых навыков / 4).',
+        'Рейтинг = 1 + 4 × индекс^1.5, округление до десятых.',
+        `Версия: ${report.testVersion}`,
+        'Экспериментальная шкала. Не официальный рейтинг.'
+      ].filter(line => line !== '').join('\n');
+      try {
+        if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+        await navigator.clipboard.writeText(text);
+        document.getElementById('result-status').textContent = 'Результат скопирован. Отправьте его тому, с кем проверяете тест.';
+      } catch {
+        const dialog = document.getElementById('copy-dialog');
+        const textarea = document.getElementById('copy-text');
+        textarea.value = text;
+        dialog.showModal();
+        textarea.focus(); textarea.select();
+      }
+    }
+
+    function downloadFile(filename, content, type) {
+      const blob = new Blob([content], {type});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url; link.download = filename;
+      document.body.appendChild(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+    }
+
+    function getCleanHtml() {
+      // Send a clean reusable test, never the current player's answers or feedback.
+      const cleanDocument = document.documentElement.cloneNode(true);
+      cleanDocument.querySelector('#app').innerHTML = INITIAL_MARKUP;
+      cleanDocument.querySelectorAll('textarea').forEach(textarea => {
+        textarea.value = '';
+        textarea.textContent = '';
+      });
+      cleanDocument.querySelectorAll('dialog').forEach(dialog => dialog.removeAttribute('open'));
+      cleanDocument.querySelector('#share-status').textContent = '';
+      return '<!doctype html>\n' + cleanDocument.outerHTML;
+    }
+
+    document.getElementById('close-dialog').addEventListener('click', () => document.getElementById('copy-dialog').close());
+    document.getElementById('download-test').addEventListener('click', () => {
+      const source = document.getElementById('share-source');
+      source.value = getCleanHtml();
+      document.getElementById('share-status').textContent = '';
+      document.getElementById('share-dialog').showModal();
+    });
+    document.getElementById('save-html').addEventListener('click', () => {
+      downloadFile('padel-level-test.html', getCleanHtml(), 'text/html;charset=utf-8');
+      document.getElementById('share-status').textContent = 'Если файл не появился в загрузках, воспользуйтесь кнопкой «Скопировать код» или скопируйте текст вручную.';
+    });
+    document.getElementById('copy-html').addEventListener('click', async () => {
+      const source = document.getElementById('share-source');
+      try {
+        if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+        await navigator.clipboard.writeText(source.value);
+        document.getElementById('share-status').textContent = 'Код скопирован. Вставьте его в текстовый редактор и сохраните как padel-test.html.';
+      } catch {
+        source.focus(); source.select();
+        document.getElementById('share-status').textContent = 'Код выделен. Нажмите Ctrl+C (на Mac — ⌘C), затем сохраните его в файл padel-test.html.';
+      }
+    });
+    document.getElementById('close-share').addEventListener('click', () => document.getElementById('share-dialog').close());
+    document.getElementById('share-dialog').addEventListener('close', () => {
+      document.getElementById('share-source').value = '';
+      document.getElementById('share-status').textContent = '';
+    });
+
+    renderIntro();
+  </script>
+</body>
+</html>
